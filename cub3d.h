@@ -6,7 +6,7 @@
 /*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/10 17:52:02 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/07/10 18:59:38 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ typedef struct s_color
 
 typedef struct s_config
 {
-	char	*NO_texture;
-	char	*SO_texture;
-	char	*WE_texture;
-	char	*EA_texture;
+	char	*no_texture;
+	char	*so_texture;
+	char	*we_texture;
+	char	*ea_texture;
 	t_color	floor_color;
 	t_color	ceiling_color;
 	char	**map;
-    int     player_y;
-    int     player_x;
+	int		player_y;
+	int		player_x;
 	int		map_height;
 	int		map_width;
 }			t_config;
@@ -54,8 +54,9 @@ int			is_map_line(char *line);
 int			flood_fill(t_config *map, char **visited, int x, int y);
 char		**init_visited_array(t_config *map);
 
-
+void		free_and_init_config(t_config *config, int n);
+void		free_all(t_config *config);
 // pour afficher les stats de la map
-void	    display_config(t_config *config);
-void	    display_map(t_config *config);
+void		display_config(t_config *config);
+void		display_map(t_config *config);
 #endif

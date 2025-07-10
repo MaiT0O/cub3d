@@ -6,11 +6,24 @@
 /*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/10 17:56:05 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/07/10 18:52:44 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	free_visited(char **visited, int height)
+{
+	int	i;
+
+	i = 0;
+	while (i < height)
+	{
+		free(visited[i]);
+		i++;
+	}
+	free(visited);
+}
 
 int	map_closed(t_config *config)
 {
@@ -32,30 +45,13 @@ int	map_closed(t_config *config)
 				config->player_x = j;
 				config->player_y = i;
 				if (!flood_fill(config, visited, j, i))
-					return (ft_putendl_fd("error walls or player ", 2), 0);
+					return (free_visited(visited, config-> map_height), 0);
 			}
 			j++;
 		}
 		i++;
 	}
-	return (1);
-}
-
-void	init_config(t_config *config)
-{
-	config->NO_texture = NULL;
-	config->SO_texture = NULL;
-	config->WE_texture = NULL;
-	config->EA_texture = NULL;
-	config->map = NULL;
-	config->map_height = 0;
-	config->map_width = 0;
-	config->floor_color.r = -1;
-	config->floor_color.g = -1;
-	config->floor_color.b = -1;
-	config->ceiling_color.r = -1;
-	config->ceiling_color.g = -1;
-	config->ceiling_color.b = -1;
+	return (free_visited(visited, config-> map_height), 1);
 }
 
 int	parsing(char *filename, t_config *config)
@@ -83,23 +79,30 @@ int	parsing(char *filename, t_config *config)
 		printf("Error not enough textures \n");
 		return (0);
 	}
-	return (close(fd), 1);
+	return (free(line), close(fd), 1);
 }
 
 int	main(int argc, char **argv)
 {
 	t_config	config = {0};
 
-	init_config(&config);
+	free_and_init_config(&config, 0);
 	if (argc != 2)
 		return (printf("Error format ./cub3d [map_file] \n"), 0);
 	else
 	{
 		if (!parsing(argv[1], &config))
+		{
+			free_and_init_config(&config, 1);
 			return (printf("Error in map descriptor\n"), 0);
+		}
 		if (!map_closed(&config))
+		{
+			free_and_init_config(&config, 1);
 			return (printf("Error in player or wall\n"), 0);
+		}
 	}
 	display_config(&config);
 	display_map(&config);
+	free_and_init_config(&config, 1);
 }

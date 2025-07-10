@@ -3,7 +3,7 @@ NAME = cub3d
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c parsing.c parsing_map.c display.c
+SRCS = main.c parsing.c parsing_map.c display.c free.c
 
 LIBFT = libft/libft.a
 
