@@ -1,33 +1,37 @@
 NAME = cub3d
 
+INCLUDES = -I/usr/include -Imlx -Ilibft
+
+MLX_LD_FLAGS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11 -lm -lz -Llibft -l:libft.a
+
 CC = gcc
+
 CFLAGS = -Wall -Wextra -Werror
 
 SRCS = main.c parsing.c parsing_map.c display.c free.c
 
-LIBFT = libft/libft.a
-
-OBJS = $(SRCS:.c=.o) $(GNL:.c=.o)
+OBJS = ${SRCS:.c=.o}
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+$(NAME): make_libs $(OBJS)
+	$(CC) $(OBJS) $(CFLAGS) $(MLX_LD_FLAGS) -o $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(LIBFT):
+make_libs:
+	make -C mlx
 	make -C libft
 
 clean:
 	rm -f $(OBJS)
 	make -C libft clean
+	make -C mlx clean
 
 fclean: clean
 	rm -f $(NAME)
 	make -C libft fclean
+	make -C mlx fclean
 
 re: fclean all
-
-.PHONY: all clean fclean re
