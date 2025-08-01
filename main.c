@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/23 19:06:05 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/01 17:59:37 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,18 @@ int		initialisation(t_config *config, char **argv)
 	return (1);
 }
 
+// Fonction de rendu appelée à chaque frame
+int render_frame(t_config *config)
+{
+    // Effacer l'écran
+    mlx_clear_window(config->mlx_ptr, config->win_ptr);
+    
+    // Effectuer le raycasting
+    raycasting(config, &config->player, &config->display);
+    
+    return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_config	config;
@@ -112,6 +124,9 @@ int	main(int argc, char **argv)
 		{
 			display_config(&config);
 			config.win_ptr = mlx_new_window(config.mlx_ptr, config.win_w, config.win_h, "cub3d");
+			
+			// CORRECTION : Appeler raycasting dans la boucle de rendu
+			render_frame(&config);
 			mlx_key_hook(config.win_ptr, key_press, &config);
 			mlx_hook(config.win_ptr, 17, 0, free_all, &config);
 			mlx_loop(config.mlx_ptr);
