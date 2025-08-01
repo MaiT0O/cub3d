@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/10 18:52:44 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/07/23 19:06:05 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	map_closed(t_config *config)
 			if (config->map[i][j] == 'N' || config->map[i][j] == 'S'
 				|| config->map[i][j] == 'E' || config->map[i][j] == 'W')
 			{
-				config->player_x = j;
-				config->player_y = i;
+				config->pX = j;
+				config->pY = i;
 				if (!flood_fill(config, visited, j, i))
 					return (free_visited(visited, config-> map_height), 0);
 			}
@@ -82,27 +82,42 @@ int	parsing(char *filename, t_config *config)
 	return (free(line), close(fd), 1);
 }
 
+int		initialisation(t_config *config, char **argv)
+{
+	init_config(config);
+	if (!parsing(argv[1], config))
+	{
+		free_all(config);
+		return (printf("Error in map descriptor\n"), 0);
+	}
+	if (!map_closed(config))
+	{
+		free_all(config);
+		return (printf("Error in player or wall\n"), 0);
+	}
+	/*init_textures(config);*/
+	init_player(config);
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
-	t_config	config = {0};
+	t_config	config;
 
-	free_and_init_config(&config, 0);
 	if (argc != 2)
 		return (printf("Error format ./cub3d [map_file] \n"), 0);
 	else
 	{
-		if (!parsing(argv[1], &config))
+		if (initialisation(&config, argv))
 		{
-			free_and_init_config(&config, 1);
-			return (printf("Error in map descriptor\n"), 0);
-		}
-		if (!map_closed(&config))
-		{
-			free_and_init_config(&config, 1);
-			return (printf("Error in player or wall\n"), 0);
+			display_config(&config);
+			config.win_ptr = mlx_new_window(config.mlx_ptr, config.win_w, config.win_h, "cub3d");
+			mlx_key_hook(config.win_ptr, key_press, &config);
+			mlx_hook(config.win_ptr, 17, 0, free_all, &config);
+			mlx_loop(config.mlx_ptr);
 		}
 	}
-	display_config(&config);
 	display_map(&config);
-	free_and_init_config(&config, 1);
+	free_all(&config);
+	return (0);
 }

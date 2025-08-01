@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/10 18:17:01 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/07/17 14:42:59 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	init_array_values(char **visited, t_config *map)
 {
@@ -98,6 +98,32 @@ int	is_map_line(char *line)
 	return (has_map_char);
 }
 
+int	check_spawn(char **map, t_config *config, int i, int j)
+{
+	int	found;
+
+	found = 0;
+	while (map[++i])
+	{
+		while (map[i][++j])
+		{
+			if (map[i][j] == 'N' || map[i][j] == 'S'
+				|| map[i][j] == 'E' || map[i][j] == 'W')
+			{
+				if (found)
+				{
+					ft_putendl_fd("Error: multiple player positions\n", 2);
+					exit(EXIT_FAILURE);
+					return (0);
+				}
+				config->boussole = map[i][j];
+				found = 1;
+			}
+		}
+	}
+	return (1);
+}
+
 int	add_map_line(t_config *config, char *line)
 {
 	int		i;
@@ -109,18 +135,17 @@ int	add_map_line(t_config *config, char *line)
 	new_map = malloc(sizeof(char *) * (map_height + 1));
 	if (!new_map)
 		return (0);
-	i = 0;
-	while (i < config -> map_height)
-	{
+	i = -1;
+	while (++i < config -> map_height)
 		new_map[i] = config->map[i];
-		i++;
-	}
 	new_map[config->map_height] = ft_strdup(line);
 	new_width = ft_strlen(new_map[config->map_height]);
 	new_map[map_height] = NULL;
 	free(config->map);
 	if (config->map_width < new_width)
 		config->map_width = new_width;
+	if (!check_spawn(new_map, config, -1, -1))
+		return (0);
 	config->map = new_map;
 	config->map_height = map_height;
 	return (1);
