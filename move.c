@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:19:24 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/01 18:07:51 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/05 16:59:35 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,199 +20,166 @@ int	key_press(int keycode, t_config *config)
 	return (1);
 }
 
-void	draw_vertical_line(t_config *game, int x, int start, int end, int color)
+void	my_mlx_pixel_put(t_texture *texture, int x, int y, int color)
 {
-    int y;
-    
-    for (y = start; y <= end; y++)
-        mlx_pixel_put(game->mlx_ptr, game->win_ptr, x, y, color);
+	if (x < 0 || x >= texture->width || y < 0 || y >= texture->height)
+		return;
+
+	int pixels_per_line = texture->line_length / (texture->bpp / 8);
+	texture->data[y * pixels_per_line + x] = color;
 }
 
-void	draw_line(t_config *config, t_display *display)
+t_cardinal_direction	get_cardinal_direction(int side, t_ray *ray)
 {
-	int		lineHeight;
-	int		drawStart;
-	int		drawEnd;
-	int 	color;
-
-	lineHeight = (int)(config->win_h / display->perpWallDist);
-	drawStart = -lineHeight / 2 + config->win_h / 2;
-	if (drawStart < 0)
-		drawStart = 0;
-	drawEnd = lineHeight / 2 + config->win_h / 2;
-	if (drawEnd >= config->win_h)
-		drawEnd = config->win_h - 1;
-	
-	color = 0xFF0000; // Rouge
-	
-	// IMPORTANT: Dessiner une ligne VERTICALE, pas horizontale !
-	// Bon ordre : du haut vers le bas
-	draw_vertical_line(config, display->x, drawStart, drawEnd, color);
-
+	if (side == 0) // Mur vertical (est/ouest)
+	{
+		if (ray->dirX > 0)
+			return EAST;
+		else
+			return WEST;
+	}
+	else // Mur horizontal (nord/sud)
+	{
+		if (ray->dirY > 0)
+			return SOUTH;
+		else
+			return NORTH;
+	}
 }
 
-void	algo_dda(t_config *config, t_player *player, t_display *display)
+
+void	draw_texture_column(t_config *config, int x, int draw_start, int draw_end,
+							int line_height, int side)
 {
-    int	hit = 0;
-    int	side = 0;
-    int mapX, mapY;
+	t_ray	*ray = &config->ray;
+	t_cardinal_direction dir;
+	t_texture *tex;
+	int		tex_x, tex_y;
+	double	step;
+	double	tex_pos;
+	int		y;
+	int		color;
 
-    // Initialiser les coordonnées de la grille à partir de la position du joueur
-    mapX = (int)player->posX;
-    mapY = (int)player->posY;
+	// 1. Déterminer la direction du mur touché
+	dir = get_cardinal_direction(side, ray);
+	tex = &config->textures[dir];
 
-    while (!hit)
-    {
-        if (display->sideDistX < display->sideDistY)
-        {
-            display->sideDistX += display->deltaDistX;
-            mapX += display->stepX;
-            side = 0;
-        }
-        else
-        {
-            display->sideDistY += display->deltaDistY;
-            mapY += display->stepY;
-            side = 1;
-        }
-        
-        if (mapY < 0 || mapY >= config->map_height ||
-            mapX < 0 || mapX >= config->map_width)
-        {
-			printf("Out of bounds: mapY: %d, mapX: %d\n", mapY, mapX);
-            hit = 1;
-        }
-        else if (config->map[mapY][mapX] == '1')
-        {
-            hit = 1;
-        }
-    }
-    
-    // Calculer la distance perpendiculaire
-    if (side == 0)
-        display->perpWallDist = (mapX - player->posX + (1 - display->stepX) / 2.0) / display->rayDirX;
-    else
-        display->perpWallDist = (mapY - player->posY + (1 - display->stepY) / 2.0) / display->rayDirY;
-    
-    // S'assurer que la distance est positive
-    if (display->perpWallDist < 0)
-        display->perpWallDist = -display->perpWallDist;
+	// 2. Calcul de la coordonnée X dans la texture
+	tex_x = (int)(ray->wallX * (double)TEXTURE_SIZE);
+	if ((side == 0 && ray->dirX < 0) || (side == 1 && ray->dirY > 0))
+		tex_x = TEXTURE_SIZE - tex_x - 1;
+
+	// 3. Hauteur du pas dans la texture (compression/étirement)
+	step = 1.0 * TEXTURE_SIZE / line_height;
+
+	// 4. Position de départ dans la texture
+	tex_pos = (draw_start - config->win_h / 2 + line_height / 2) * step;
+
+	// 5. Boucle pour chaque pixel vertical
+	y = draw_start;
+	while (y < draw_end)
+	{
+		tex_y = (int)tex_pos & (TEXTURE_SIZE - 1);
+		tex_pos += step;
+
+		color = tex->data[TEXTURE_SIZE * tex_y + tex_x];
+
+		// Optionnel : ombrage sur les murs Nord/Sud
+		if (dir == NORTH || dir == SOUTH)
+			color = (color >> 1) & 0x7F7F7F;
+
+		// Écrire le pixel dans ton image finale (à adapter à ta lib)
+		my_mlx_pixel_put(&config->frame, x, y, color); // remplace par ton système d'affichage
+		y++;
+	}
 }
 
-void	step(t_config *config, t_player *player, t_display *display)
-{
-	if (display->rayDirX < 0)
-	{
-		display->stepX = -1;
-		display->sideDistX = (player->posX - (int)player->posX) * display->deltaDistX;
-	}
-	else
-	{
-		display->stepX = 1;
-		display->sideDistX = ((int)player->posX + 1.0 - player->posX) * display->deltaDistX;
-	}
 
-	if (display->rayDirY < 0)
-	{
-		display->stepY = -1;
-		display->sideDistY = (player->posY - (int)player->posY) * display->deltaDistY;
-	}
-	else
-	{
-		display->stepY = 1;
-		display->sideDistY = ((int)player->posY + 1.0 - player->posY) * display->deltaDistY;
-	}
-	algo_dda(config, player, display);
-}
-
-void	raycasting(t_config *config, t_player *player, t_display *display)
+void	raycasting(t_config *config, t_player *player, t_ray *ray)
 {
     int x;
+    int side;
     double cameraX;
 
-    for (x = 0; x < config->win_w; x++)
+    x = -1;
+    while (++x < WIN_W)
     {
-        display->x = x;
-        cameraX = 2 * x / (double)config->win_w - 1;
+        cameraX = 2 * x / (double)WIN_W - 1;
 
         // Calcul direction du rayon
-        display->rayDirX = player->dirX + player->planeX * cameraX;
-        display->rayDirY = player->dirY + player->planeY * cameraX;
-
-        // Position de départ dans la map
-        int mapX = (int)player->posX;
-        int mapY = (int)player->posY;
+        ray->dirX = player->dirX + player->planeX * cameraX;
+        ray->dirY = player->dirY + player->planeY * cameraX;
 
         // Calcul des distances
-        double deltaDistX = (display->rayDirX == 0) ? 1e30 : fabs(1 / display->rayDirX);
-        double deltaDistY = (display->rayDirY == 0) ? 1e30 : fabs(1 / display->rayDirY);
+        ray->mapX = (int)player->posX;
+        ray->mapY = (int)player->posY;
 
-        int stepX, stepY;
-        double sideDistX, sideDistY;
+        ray->deltaDistX = fabs(1 / ray->dirX);
+        ray->deltaDistY = fabs(1 / ray->dirY);
 
-        if (display->rayDirX < 0)
+        if (ray->dirX < 0)
         {
-            stepX = -1;
-            sideDistX = (player->posX - mapX) * deltaDistX;
+            ray->stepX = -1;
+            ray->sideDistX = (player->posX - ray->mapX) * ray->deltaDistX;
         }
         else
         {
-            stepX = 1;
-            sideDistX = (mapX + 1.0 - player->posX) * deltaDistX;
+            ray->stepX = 1;
+            ray->sideDistX = (ray->mapX + 1.0 - player->posX) * ray->deltaDistX;
         }
-        if (display->rayDirY < 0)
+        if (ray->dirY < 0)
         {
-            stepY = -1;
-            sideDistY = (player->posY - mapY) * deltaDistY;
+            ray->stepY = -1;
+            ray->sideDistY = (player->posY - ray->mapY) * ray->deltaDistY;
         }
         else
         {
-            stepY = 1;
-            sideDistY = (mapY + 1.0 - player->posY) * deltaDistY;
+            ray->stepY = 1;
+            ray->sideDistY = (ray->mapY + 1.0 - player->posY) * ray->deltaDistY;
         }
 
-        // DDA
-        int hit = 0, side = 0;
-        while (!hit)
+        while (true)
         {
-            if (sideDistX < sideDistY)
+            if (ray->sideDistX < ray->sideDistY)
             {
-                sideDistX += deltaDistX;
-                mapX += stepX;
+                ray->sideDistX += ray->deltaDistX;
+                ray->mapX += ray->stepX;
                 side = 0;
             }
             else
             {
-                sideDistY += deltaDistY;
-                mapY += stepY;
+                ray->sideDistY += ray->deltaDistY;
+                ray->mapY += ray->stepY;
                 side = 1;
             }
-            if (mapY < 0 || mapY >= config->map_height || mapX < 0 || mapX >= config->map_width)
+            if (config->map[ray->mapY][ray->mapX] == '1')
                 break;
-            if (config->map[mapY][mapX] == '1')
-                hit = 1;
         }
 
-        // Calcul distance perpendiculaire
-        double perpWallDist;
         if (side == 0)
-            perpWallDist = (mapX - player->posX + (1 - stepX) / 2.0) / display->rayDirX;
+            ray->perpWallDist = (ray->mapX - player->posX + (1 - ray->stepX) / 2.0) / ray->dirX;
         else
-            perpWallDist = (mapY - player->posY + (1 - stepY) / 2.0) / display->rayDirY;
+            ray->perpWallDist = (ray->mapY - player->posY + (1 - ray->stepY) / 2.0) / ray->dirY;
 
         // Calcul hauteur du mur
-        int lineHeight = (int)(config->win_h / perpWallDist);
+        int lineHeight = (int)(WIN_H / ray->perpWallDist);
 
         // Calcul début et fin de la ligne à dessiner
-        int drawStart = -lineHeight / 2 + config->win_h / 2;
-        if (drawStart < 0) drawStart = 0;
-        int drawEnd = lineHeight / 2 + config->win_h / 2;
-        if (drawEnd >= config->win_h) drawEnd = config->win_h - 1;
+        int drawStart = -lineHeight / 2 + WIN_H / 2;
+        if (drawStart < 0) 
+            drawStart = 0;
 
-        // Couleur selon le côté du mur
-        int color = (side == 0) ? 0xFF0000 : 0x880000;
+        int drawEnd = lineHeight / 2 + WIN_H / 2;
+        if (drawEnd >= WIN_H) 
+            drawEnd = WIN_H - 1;
 
-        // Dessin de la ligne verticale
-        draw_vertical_line(config, x, drawStart, drawEnd, color);
+        if (side == 0)
+            ray->wallX = player->posY + ray->perpWallDist * ray->dirY;
+        else
+            ray->wallX = player->posX + ray->perpWallDist * ray->dirX;
+        ray->wallX -= floor(ray->wallX);
+
+        draw_texture_column(config, x, drawStart, drawEnd, lineHeight, side);
     }
 }
+

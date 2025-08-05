@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/01 17:59:37 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/05 16:57:27 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	map_closed(t_config *config)
 			if (config->map[i][j] == 'N' || config->map[i][j] == 'S'
 				|| config->map[i][j] == 'E' || config->map[i][j] == 'W')
 			{
-				config->pX = j;
-				config->pY = i;
+				config->mapX = j;
+				config->mapY = i;
 				if (!flood_fill(config, visited, j, i))
 					return (free_visited(visited, config-> map_height), 0);
 			}
@@ -107,8 +107,8 @@ int render_frame(t_config *config)
     mlx_clear_window(config->mlx_ptr, config->win_ptr);
     
     // Effectuer le raycasting
-    raycasting(config, &config->player, &config->display);
-    
+    raycasting(config, &config->player, &config->ray);
+	mlx_put_image_to_window(config->mlx_ptr, config->win_ptr, config->frame.img, 0, 0);
     return (0);
 }
 
@@ -132,7 +132,7 @@ int	main(int argc, char **argv)
 			mlx_loop(config.mlx_ptr);
 		}
 	}
-	display_map(&config);
+	/*display_map(&config);*/
 	free_all(&config);
 	return (0);
 }

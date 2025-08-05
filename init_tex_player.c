@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/07/23 18:19:39 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/05 17:00:04 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void    load_textures(t_config *config, t_texture *tex, char *path)
         printf("Error: failed to load texture: %s\n", path);
         exit(EXIT_FAILURE);
     }
-
-    tex->data = (int *)mlx_get_data_addr(tex->img, &tex->bits_per_pixels, &tex->size_line, &tex->endian);
+    tex->data = (int *)mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_length, &tex->endian);
 }
 
 void    init_textures(t_config *config)
@@ -52,8 +51,8 @@ void	check_boussole(t_config *config)
 
 void	init_player(t_config *config)
 {
-	config->player.posX = config->pX + 0.5;
-	config->player.posY = config->pY + 0.5;
+	config->player.posX = config->mapX + 0.5;
+	config->player.posY = config->mapY + 0.5;
 	if (config->boussole == 'N')
 	{
 		config->player.dirX = 0;
@@ -87,7 +86,10 @@ void	init_config(t_config *config)
 	config->ceiling_color.r = -1;
 	config->ceiling_color.g = -1;
 	config->ceiling_color.b = -1;
-	config->win_h = 700;
-	config->win_w = 800;
 	config->mlx_ptr = mlx_init();
+	config->frame.img = mlx_new_image(config->mlx_ptr, WIN_W, WIN_H);
+	config->frame.data = (int *)mlx_get_data_addr(config->frame.img,
+									   &config->frame.bpp,
+									   &config->frame.line_length,
+									   &config->frame.endian);
 }

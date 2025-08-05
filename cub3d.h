@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/01 14:49:37 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/05 16:51:46 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@ typedef struct s_color
 	int		b;
 }			t_color;
 
+#define TEXTURE_SIZE 64
+
+typedef enum e_cardinal_direction
+{
+	NORTH = 0,
+	SOUTH = 1,
+	WEST = 2,
+	EAST = 3
+}	t_cardinal_direction;
+
 typedef struct s_player
 {
     double posX;
@@ -40,28 +50,28 @@ typedef struct s_player
     double planeY;
 }   t_player;
 
-typedef struct s_display
+typedef struct s_ray
 {
-	double	cameraX;
-	double	rayDirX;
-	double	rayDirY;
-	double	deltaDistX;
-	double	deltaDistY;
-	int		stepX;
-	int		stepY;
-	double	sideDistX;
-	double	sideDistY;
-	double	perpWallDist;
-	int		x;
-	int		side;
-}	t_display;
+    double dirX;      // direction du rayon
+    double dirY;
+    double sideDistX;
+    double sideDistY;
+    double deltaDistX;
+    double deltaDistY;
+    double perpWallDist;
+    int stepX;
+    int stepY;
+    int mapX;
+    int mapY;
+	double wallX;
+}	t_ray;
 
 typedef struct s_texture
 {
     void    *img;
     int     *data;      // tableau de pixels (int ARGB)
-    int		bits_per_pixels;
-	int		size_line;
+    int		bpp;
+	int		line_length;
 	int		endian;
 	int     width;
     int     height;
@@ -76,12 +86,13 @@ typedef struct s_config
 	t_color	floor_color;
 	t_color	ceiling_color;
 	t_player	player;
-	t_display	display;
+	t_ray		ray;
 	t_texture	textures[4];
+	t_texture	frame;
 	char	**map;
 	char	boussole;
-	int		pY;
-	int		pX;
+	int		mapY;
+	int		mapX;
 	int		map_height;
 	int		map_width;
 	char	*no_texture;
@@ -114,6 +125,9 @@ void    	init_textures(t_config *config);
 void		free_textures(t_config *config);
 
 int			key_press(int keycode, t_config *config);
-void		raycasting(t_config *config, t_player *player, t_display *display);
+void		raycasting(t_config *config, t_player *player, t_ray *ray);
+
+# define WIN_H 1000
+# define WIN_W 1000
 
 #endif
