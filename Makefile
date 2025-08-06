@@ -6,7 +6,7 @@
 #    By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/17 14:30:24 by ebansse           #+#    #+#              #
-#    Updated: 2025/07/17 14:30:25 by ebansse          ###   ########.fr        #
+#    Updated: 2025/08/06 19:01:14 by ebansse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c display.c free.c move.c init_tex_player.c
+SRCS = main.c display.c free.c raycast.c render.c move.c init_tex_player.c
 PARSER_SRCS = parser/parsing.c parser/parsing_map.c
 
 OBJS = $(SRCS:.c=.o) $(PARSER_SRCS:.c=.o)
@@ -56,7 +56,6 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 	@make -C libft fclean
-	@make -C mlx fclean
 	@echo "${RED}${NAME} binaries cleaned!${RESET}"
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/17 14:42:59 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/06 15:45:45 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	check_spawn(char **map, t_config *config, int i, int j)
 					exit(EXIT_FAILURE);
 					return (0);
 				}
-				config->boussole = map[i][j];
+				config->player.boussole = map[i][j];
 				found = 1;
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/05 16:57:27 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/06 19:21:34 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	map_closed(t_config *config)
 			if (config->map[i][j] == 'N' || config->map[i][j] == 'S'
 				|| config->map[i][j] == 'E' || config->map[i][j] == 'W')
 			{
-				config->mapX = j;
-				config->mapY = i;
+				config->player.mapX = j;
+				config->player.mapY = i;
 				if (!flood_fill(config, visited, j, i))
 					return (free_visited(visited, config-> map_height), 0);
 			}
@@ -96,20 +96,29 @@ int		initialisation(t_config *config, char **argv)
 		return (printf("Error in player or wall\n"), 0);
 	}
 	/*init_textures(config);*/
-	init_player(config);
+	init_player(&config->player, config);
 	return (1);
 }
 
-// Fonction de rendu appelée à chaque frame
-int render_frame(t_config *config)
+int init_game(t_config *config)
 {
-    // Effacer l'écran
-    mlx_clear_window(config->mlx_ptr, config->win_ptr);
-    
-    // Effectuer le raycasting
-    raycasting(config, &config->player, &config->ray);
+	config->mlx_ptr = mlx_init();
+	config->win_ptr = mlx_new_window(config->mlx_ptr, WIN_W, WIN_H, "cub3d");
+	config->frame.img = mlx_new_image(config->mlx_ptr, WIN_W, WIN_H);
+	config->frame.addr = mlx_get_data_addr(config->frame.img, &config->frame.bpp, &config->frame.line_length, &config->frame.endian);
 	mlx_put_image_to_window(config->mlx_ptr, config->win_ptr, config->frame.img, 0, 0);
     return (0);
+}
+
+
+int	draw_loop(t_config *game)
+{
+	move_player(&game->player);
+	clear_img(game);
+	draw_square(game->player.x, game->player.y, 10, 0xFF0000, game);
+	draw_map(game);
+	mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->frame.img, 0, 0);
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -123,16 +132,14 @@ int	main(int argc, char **argv)
 		if (initialisation(&config, argv))
 		{
 			display_config(&config);
-			config.win_ptr = mlx_new_window(config.mlx_ptr, config.win_w, config.win_h, "cub3d");
-			
-			// CORRECTION : Appeler raycasting dans la boucle de rendu
-			render_frame(&config);
-			mlx_key_hook(config.win_ptr, key_press, &config);
+			init_game(&config);
 			mlx_hook(config.win_ptr, 17, 0, free_all, &config);
+			mlx_hook(config.win_ptr, 2, 1L<<0, key_press, &config);
+			mlx_hook(config.win_ptr, 3, 1L<<1, key_release, &config.player);
+			mlx_loop_hook(config.mlx_ptr, draw_loop, &config);
 			mlx_loop(config.mlx_ptr);
 		}
 	}
-	/*display_map(&config);*/
 	free_all(&config);
 	return (0);
 }

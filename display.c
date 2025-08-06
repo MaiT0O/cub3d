@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:53:17 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/05 12:21:49 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:55:01 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	display_config(t_config *config)
 	printf("SO: %s\n", config->so_texture ? config->so_texture : "NULL");
 	printf("WE: %s\n", config->we_texture ? config->we_texture : "NULL");
 	printf("EA: %s\n", config->ea_texture ? config->ea_texture : "NULL");
-	printf("Player pos: x = %d, y = %d\n", config->mapX, config->mapY);
+	printf("Player pos: x = %d, y = %d\n", config->player.mapX, config->player.mapY);
 	printf("Floor: R=%d G=%d B=%d\n", config->floor_color.r,
 		config->floor_color.g, config->floor_color.b);
 	printf("Ceiling: R=%d G=%d B=%d\n", config->ceiling_color.r,

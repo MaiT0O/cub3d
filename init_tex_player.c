@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/05 17:00:04 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/06 17:57:58 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,44 +31,51 @@ void    init_textures(t_config *config)
     load_textures(config, &config->textures[3], config->ea_texture);
 }
 
-void	check_boussole(t_config *config)
+void	check_boussole(t_player *player)
 {
-	if (config->boussole == 'E')
+	if (player->boussole == 'E')
 	{
-		config->player.dirX = 1;
-		config->player.dirY = 0;
-		config->player.planeX = 0;
-		config->player.planeY = 0.66;
+		player->dirX = 1;
+		player->dirY = 0;
+		player->planeX = 0;
+		player->planeY = 0.66;
 	}
-	else if (config->boussole == 'W')
+	else if (player->boussole == 'W')
 	{
-		config->player.dirX = -1;
-		config->player.dirY = 0;
-		config->player.planeX = 0;
-		config->player.planeY = -0.66;
+		player->dirX = -1;
+		player->dirY = 0;
+		player->planeX = 0;
+		player->planeY = -0.66;
 	}
 }
 
-void	init_player(t_config *config)
+void	init_player(t_player *player, t_config *config)
 {
-	config->player.posX = config->mapX + 0.5;
-	config->player.posY = config->mapY + 0.5;
-	if (config->boussole == 'N')
+	player->posX = player->mapX + 0.5;
+	player->posY = player->mapY + 0.5;
+	printf("map width : %d / map_heigth : %d\n", config->map_width, config->map_height);
+	player->x = WIN_W / config->map_width * player->mapX;
+	player->y = WIN_H / config->map_height * player->mapX;
+	player->key_up = false;
+	player->key_down = false;
+	player->key_right = false;
+	player->key_left = false;
+	if (player->boussole == 'N')
 	{
-		config->player.dirX = 0;
-		config->player.dirY = -1;
-		config->player.planeX = 0.66;
-		config->player.planeY = 0;
+		player->dirX = 0;
+		player->dirY = -1;
+		player->planeX = 0.66;
+		player->planeY = 0;
 	}
-	else if (config->boussole == 'S')
+	else if (player->boussole == 'S')
 	{
-		config->player.dirX = 0;
-		config->player.dirY = 1;
-		config->player.planeX = -0.66;
-		config->player.planeY = 0;
+		player->dirX = 0;
+		player->dirY = 1;
+		player->planeX = -0.66;
+		player->planeY = 0;
 	}
 	else
-		check_boussole(config);
+		check_boussole(player);
 }
 
 void	init_config(t_config *config)
@@ -86,10 +93,4 @@ void	init_config(t_config *config)
 	config->ceiling_color.r = -1;
 	config->ceiling_color.g = -1;
 	config->ceiling_color.b = -1;
-	config->mlx_ptr = mlx_init();
-	config->frame.img = mlx_new_image(config->mlx_ptr, WIN_W, WIN_H);
-	config->frame.data = (int *)mlx_get_data_addr(config->frame.img,
-									   &config->frame.bpp,
-									   &config->frame.line_length,
-									   &config->frame.endian);
 }

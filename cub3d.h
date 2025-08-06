@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/05 16:51:46 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/06 19:20:36 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ typedef struct s_color
 	int		b;
 }			t_color;
 
-#define TEXTURE_SIZE 64
-
 typedef enum e_cardinal_direction
 {
 	NORTH = 0,
@@ -44,10 +42,19 @@ typedef struct s_player
 {
     double posX;
     double posY;
+	int		mapX;
+	int		mapY;
+	float	x;
+	float	y;
     double dirX;
     double dirY;
     double planeX;
     double planeY;
+	char	boussole;
+	bool	key_up;
+	bool	key_down;
+	bool	key_right;
+	bool	key_left;
 }   t_player;
 
 typedef struct s_ray
@@ -69,7 +76,8 @@ typedef struct s_ray
 typedef struct s_texture
 {
     void    *img;
-    int     *data;      // tableau de pixels (int ARGB)
+    int     *data;
+	char	*addr;
     int		bpp;
 	int		line_length;
 	int		endian;
@@ -90,9 +98,6 @@ typedef struct s_config
 	t_texture	textures[4];
 	t_texture	frame;
 	char	**map;
-	char	boussole;
-	int		mapY;
-	int		mapX;
 	int		map_height;
 	int		map_width;
 	char	*no_texture;
@@ -100,7 +105,7 @@ typedef struct s_config
 	char	*we_texture;
 	char	*ea_texture;
 }			t_config;
-
+/*parsing*/
 int			check_extension(char *filename);
 int			valid_text(char **texture, char *identifier, char *line);
 int			valid_text_2(void);
@@ -112,22 +117,39 @@ int			is_map_line(char *line);
 
 int			flood_fill(t_config *map, char **visited, int x, int y);
 char		**init_visited_array(t_config *map);
-
+/*init*/
 void		init_config(t_config *config);
-int			free_all(t_config *config);
+void		init_player(t_player *player, t_config *config);
+void    	init_textures(t_config *config);
 // pour afficher les stats de la map
 void		display_config(t_config *config);
 void		display_map(t_config *config);
 
-void		init_player(t_config *config);
-void    	init_textures(t_config *config);
-
+/*free*/
 void		free_textures(t_config *config);
+int			free_all(t_config *config);
 
-int			key_press(int keycode, t_config *config);
+/*raycasting*/
 void		raycasting(t_config *config, t_player *player, t_ray *ray);
+/*draw*/
+void    put_pixel(int x, int y, int color, t_texture *frame);
+void    draw_square(int x, int y, int size, int color, t_config *game);
+void clear_img(t_config *game);
+void    draw_map(t_config *game);
+/*hook*/
+int key_press(int keycode, t_config *config);
+int key_release(int keycode, t_player *player);
+void    move_player(t_player *player);
 
-# define WIN_H 1000
-# define WIN_W 1000
+# define WIN_H 720
+# define WIN_W 1280
+# define WALL_COLOR 0xFF2222
+# define FLOOR_COLOR 0x222222
+# define CEILING_COLOR 0xCCCCCC
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define PI 3.14159265359
 
 #endif
