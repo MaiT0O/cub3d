@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/06 19:20:36 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/07 19:36:12 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,21 @@ typedef struct s_player
 	int		mapY;
 	float	x;
 	float	y;
+	float	angle;
+
     double dirX;
     double dirY;
     double planeX;
     double planeY;
+
 	char	boussole;
+
 	bool	key_up;
 	bool	key_down;
 	bool	key_right;
 	bool	key_left;
+	bool	left_rotate;
+	bool	right_rotate;
 }   t_player;
 
 typedef struct s_ray
@@ -119,7 +125,7 @@ int			flood_fill(t_config *map, char **visited, int x, int y);
 char		**init_visited_array(t_config *map);
 /*init*/
 void		init_config(t_config *config);
-void		init_player(t_player *player, t_config *config);
+void		init_player(t_player *player);
 void    	init_textures(t_config *config);
 // pour afficher les stats de la map
 void		display_config(t_config *config);
@@ -132,14 +138,14 @@ int			free_all(t_config *config);
 /*raycasting*/
 void		raycasting(t_config *config, t_player *player, t_ray *ray);
 /*draw*/
-void    put_pixel(int x, int y, int color, t_texture *frame);
-void    draw_square(int x, int y, int size, int color, t_config *game);
-void clear_img(t_config *game);
-void    draw_map(t_config *game);
+void    	put_pixel(int x, int y, int color, t_texture *frame);
+void    	draw_square(int x, int y, int size, int color, t_config *game);
+void 		clear_img(t_config *game);
+void    	draw_map(t_config *game);
 /*hook*/
-int key_press(int keycode, t_config *config);
-int key_release(int keycode, t_player *player);
-void    move_player(t_player *player);
+int 		key_press(int keycode, t_config *config);
+int 		key_release(int keycode, t_player *player);
+void    	move_player(t_player *player);
 
 # define WIN_H 720
 # define WIN_W 1280
@@ -151,5 +157,8 @@ void    move_player(t_player *player);
 # define S 115
 # define D 100
 # define PI 3.14159265359
+# define BLOCK 64
+# define RIGHT 65363
+# define LEFT 65361
 
 #endif

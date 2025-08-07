@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/06 19:20:23 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/07 19:26:55 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void    draw_map(t_config *game)
         while (map[y][x])
         {
             if (map[y][x] == '1')
-                draw_square(x * 64, y * 64, 64, 0x0000FF, game);
+                draw_square(x * BLOCK, y * BLOCK, BLOCK, 0x0000FF, game);
             x++;
         }
         y++;

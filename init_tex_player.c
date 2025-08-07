@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/06 17:57:58 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/07 19:19:36 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,19 @@ void	check_boussole(t_player *player)
 	}
 }
 
-void	init_player(t_player *player, t_config *config)
+void	init_player(t_player *player)
 {
 	player->posX = player->mapX + 0.5;
 	player->posY = player->mapY + 0.5;
-	printf("map width : %d / map_heigth : %d\n", config->map_width, config->map_height);
-	player->x = WIN_W / config->map_width * player->mapX;
-	player->y = WIN_H / config->map_height * player->mapX;
+	player->x = BLOCK * player->mapX;
+	player->y = BLOCK * player->mapX;
+	player->angle = PI / 2;
 	player->key_up = false;
 	player->key_down = false;
 	player->key_right = false;
 	player->key_left = false;
+	player->left_rotate = false;
+    player->right_rotate = false;
 	if (player->boussole == 'N')
 	{
 		player->dirX = 0;

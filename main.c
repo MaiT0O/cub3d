@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/06 19:21:34 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/07 21:06:43 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int		initialisation(t_config *config, char **argv)
 		return (printf("Error in player or wall\n"), 0);
 	}
 	/*init_textures(config);*/
-	init_player(&config->player, config);
+	init_player(&config->player);
 	return (1);
 }
 
@@ -110,13 +110,48 @@ int init_game(t_config *config)
     return (0);
 }
 
+bool	touch(float px, float py, t_config *game)
+{
+	int	x = px / BLOCK;
+	int	y = py / BLOCK;
+	if (game->map[y][x] == '1')
+		return (true);
+	return (false);
+}
+
+void draw_line(t_player *player, t_config *game, float start_x)
+{
+    float cos_angle = cos(start_x);
+    float sin_angle = sin(start_x);
+    float ray_x = player->x;
+    float ray_y = player->y;
+
+    while(!touch(ray_x, ray_y, game))
+    {
+        put_pixel(ray_x, ray_y, 0xFF0000, &game->frame);
+        ray_x += cos_angle;
+        ray_y += sin_angle;
+    }
+}
 
 int	draw_loop(t_config *game)
 {
+	
 	move_player(&game->player);
 	clear_img(game);
-	draw_square(game->player.x, game->player.y, 10, 0xFF0000, game);
+	draw_square(game->player.x, game->player.y, 10, 0x00FF00, game);
 	draw_map(game);
+	float fraction = PI / 3 / WIN_W;
+	float start_x = game->player.angle - PI / 6;
+	int	i = 0;
+	while (i < WIN_H)
+	{
+		draw_line(&game->player, game, start_x);
+		start_x += fraction;
+		i++;		
+	}
+
+	
 	mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->frame.img, 0, 0);
 	return (0);
 }
@@ -133,6 +168,7 @@ int	main(int argc, char **argv)
 		{
 			display_config(&config);
 			init_game(&config);
+			printf("map width : %d / map_heigth : %d\n", config.map_width, config.map_height);
 			mlx_hook(config.win_ptr, 17, 0, free_all, &config);
 			mlx_hook(config.win_ptr, 2, 1L<<0, key_press, &config);
 			mlx_hook(config.win_ptr, 3, 1L<<1, key_release, &config.player);
