@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/07 19:26:55 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/20 15:28:55 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	rgb_to_hex(int r, int g, int b)
+{
+    return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+}
 
 void    put_pixel(int x, int y, int color, t_texture *frame)
 {

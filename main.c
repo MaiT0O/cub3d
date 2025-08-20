@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/07 21:06:43 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/20 15:31:08 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,47 @@ bool	touch(float px, float py, t_config *game)
 	return (false);
 }
 
-void draw_line(t_player *player, t_config *game, float start_x)
+float distance(float x, float y)
+{
+	return (sqrt(x * x + y * y));
+}
+
+float fixed_dist(float delta_x,float delta_y, t_config *game)
+{
+    float angle = atan2(delta_y, delta_x) - game->player.angle;
+    float fix_dist = distance(delta_x, delta_y) * cos(angle);
+    return fix_dist;
+}
+
+void	draw_floor_ceiling(t_config *game)
+{
+	int x;
+	int y;
+	t_color color;
+
+	y = 0;
+	while (y < WIN_H)
+	{
+		x = 0;
+		while (x < WIN_W)
+		{
+			if (y < WIN_H / 2)
+			{
+				color = game->ceiling_color;
+				printf("hex color ceiling : %d\n", rgb_to_hex(color.r, color.g, color.b));
+				put_pixel(x, y, rgb_to_hex(color.r, color.g, color.b), &game->frame); // Ceiling color
+			}
+			else
+			{
+				color = game->floor_color;
+				printf("hex color floor : %d\n", rgb_to_hex(color.r, color.g, color.b));
+				put_pixel(x, y, rgb_to_hex(color.r, color.g, color.b), &game->frame); // Floor color
+			}
+		}
+	}
+}
+
+void draw_line(t_player *player, t_config *game, float start_x, int i)
 {
     float cos_angle = cos(start_x);
     float sin_angle = sin(start_x);
@@ -128,30 +168,37 @@ void draw_line(t_player *player, t_config *game, float start_x)
 
     while(!touch(ray_x, ray_y, game))
     {
-        put_pixel(ray_x, ray_y, 0xFF0000, &game->frame);
+        /*put_pixel(ray_x, ray_y, 0xFF0000, &game->frame);*/
         ray_x += cos_angle;
         ray_y += sin_angle;
     }
+	float dist = fixed_dist(ray_x - player->x, ray_y - player->y, game);
+	float height = (BLOCK / dist) * (WIN_W / 2);
+	int	start_y = (WIN_H - height) / 2;
+	int	end = start_y + height;
+	while(start_y < end)
+	{
+		put_pixel(i, start_y, 0x0000FF, &game->frame);
+		start_y++;
+	}
 }
 
 int	draw_loop(t_config *game)
 {
-	
 	move_player(&game->player);
 	clear_img(game);
-	draw_square(game->player.x, game->player.y, 10, 0x00FF00, game);
-	draw_map(game);
+	draw_floor_ceiling(game);
+	/*draw_square(game->player.x, game->player.y, 10, 0x00FF00, game);
+	draw_map(game);*/
 	float fraction = PI / 3 / WIN_W;
 	float start_x = game->player.angle - PI / 6;
 	int	i = 0;
-	while (i < WIN_H)
+	while (i < WIN_W)
 	{
-		draw_line(&game->player, game, start_x);
+		draw_line(&game->player, game, start_x, i);
 		start_x += fraction;
 		i++;		
 	}
-
-	
 	mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->frame.img, 0, 0);
 	return (0);
 }
