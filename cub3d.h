@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/20 15:21:28 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 02:02:11 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ int			free_all(t_config *config);
 void		raycasting(t_config *config, t_player *player, t_ray *ray);
 /*draw*/
 void    	put_pixel(int x, int y, int color, t_texture *frame);
+void    	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame);
 int			rgb_to_hex(int r, int g, int b);
 void    	draw_square(int x, int y, int size, int color, t_config *game);
 void 		clear_img(t_config *game);

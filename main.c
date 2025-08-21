@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/20 15:31:08 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 02:00:31 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	map_closed(t_config *config)
 			{
 				config->player.mapX = j;
 				config->player.mapY = i;
+				config->player.boussole = config->map[i][j];
 				if (!flood_fill(config, visited, j, i))
 					return (free_visited(visited, config-> map_height), 0);
 			}
@@ -97,6 +98,8 @@ int		initialisation(t_config *config, char **argv)
 	}
 	/*init_textures(config);*/
 	init_player(&config->player);
+	printf("angle : %f\n", config->player.angle);
+	printf("boussole : %c\n", config->player.boussole);
 	return (1);
 }
 
@@ -135,7 +138,7 @@ void	draw_floor_ceiling(t_config *game)
 {
 	int x;
 	int y;
-	t_color color;
+	t_color *color;
 
 	y = 0;
 	while (y < WIN_H)
@@ -145,15 +148,13 @@ void	draw_floor_ceiling(t_config *game)
 		{
 			if (y < WIN_H / 2)
 			{
-				color = game->ceiling_color;
-				printf("hex color ceiling : %d\n", rgb_to_hex(color.r, color.g, color.b));
-				put_pixel(x, y, rgb_to_hex(color.r, color.g, color.b), &game->frame); // Ceiling color
+				color = &game->ceiling_color;
+				put_pixel_rgb(x, y, color, &game->frame);
 			}
 			else
 			{
-				color = game->floor_color;
-				printf("hex color floor : %d\n", rgb_to_hex(color.r, color.g, color.b));
-				put_pixel(x, y, rgb_to_hex(color.r, color.g, color.b), &game->frame); // Floor color
+				color = &game->floor_color;
+				put_pixel_rgb(x, y, color, &game->frame);
 			}
 		}
 	}
@@ -187,7 +188,7 @@ int	draw_loop(t_config *game)
 {
 	move_player(&game->player);
 	clear_img(game);
-	draw_floor_ceiling(game);
+	/*draw_floor_ceiling(game);*/
 	/*draw_square(game->player.x, game->player.y, 10, 0x00FF00, game);
 	draw_map(game);*/
 	float fraction = PI / 3 / WIN_W;

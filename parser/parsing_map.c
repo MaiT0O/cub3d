@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/20 14:38:11 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 02:02:48 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	is_map_line(char *line)
 	return (has_map_char);
 }
 
-int	check_spawn(char **map, t_config *config, int i, int j)
+int	check_spawn(char **map, int i, int j)
 {
 	int	found;
 
@@ -116,9 +116,6 @@ int	check_spawn(char **map, t_config *config, int i, int j)
 					exit(EXIT_FAILURE);
 					return (0);
 				}
-				config->player.boussole = map[i][j];
-				config->player.mapX = j;
-				config->player.mapY = i;
 				found = 1;
 			}
 		}
@@ -146,7 +143,7 @@ int	add_map_line(t_config *config, char *line)
 	free(config->map);
 	if (config->map_width < new_width)
 		config->map_width = new_width;
-	if (!check_spawn(new_map, config, -1, -1))
+	if (!check_spawn(new_map, -1, -1))
 		return (0);
 	config->map = new_map;
 	config->map_height = map_height;

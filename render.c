@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/20 15:28:55 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 00:26:28 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,20 @@
 int	rgb_to_hex(int r, int g, int b)
 {
     return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+}
+
+void    put_pixel_rgb(int x, int y, t_color *color, t_texture *frame)
+{
+    int index;
+
+    if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
+        return;
+
+    index = y * frame->line_length + x * (frame->bpp / 8);
+
+    frame->addr[index] = color->b & 0xFF;        // Blue
+    frame->addr[index + 1] = color->g & 0xFF;    // Green
+    frame->addr[index + 2] = color->r & 0xFF;    // Red
 }
 
 void    put_pixel(int x, int y, int color, t_texture *frame)
