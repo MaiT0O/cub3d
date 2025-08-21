@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/21 02:02:11 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 13:22:49 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ typedef enum e_cardinal_direction
 
 typedef struct s_player
 {
-    double posX;
-    double posY;
 	int		mapX;
 	int		mapY;
 	float	x;

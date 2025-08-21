@@ -6,97 +6,92 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/21 00:26:28 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 13:54:15 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	rgb_to_hex(int r, int g, int b)
-{
-    return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
-}
-
 void    put_pixel_rgb(int x, int y, t_color *color, t_texture *frame)
 {
-    int index;
+	int index;
 
-    if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
-        return;
+	if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
+		return;
 
-    index = y * frame->line_length + x * (frame->bpp / 8);
+	index = y * frame->line_length + x * (frame->bpp / 8);
 
-    frame->addr[index] = color->b & 0xFF;        // Blue
-    frame->addr[index + 1] = color->g & 0xFF;    // Green
-    frame->addr[index + 2] = color->r & 0xFF;    // Red
+	frame->addr[index] = color->b & 0xFF;
+	frame->addr[index + 1] = color->g & 0xFF;
+	frame->addr[index + 2] = color->r & 0xFF;
 }
 
 void    put_pixel(int x, int y, int color, t_texture *frame)
 {
-    int index;
+	int index;
 
-    if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
-        return ;
+	if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
+		return ;
 
-    index = y * frame->line_length + x * frame->bpp / 8;
-    frame->addr[index] = color & 0xFF;
-    frame->addr[index + 1] = (color >> 8) & 0xFF;
-    frame->addr[index + 2] = (color >> 16) & 0xFF;
+	index = y * frame->line_length + x * frame->bpp / 8;
+	frame->addr[index] = color & 0xFF;
+	frame->addr[index + 1] = (color >> 8) & 0xFF;
+	frame->addr[index + 2] = (color >> 16) & 0xFF;
 }
 
 void    draw_map(t_config *game)
 {
-    char    **map;
-    int y;
+	char    **map;
+	int y;
 	int	x;
 
-    map = game->map;
+	map = game->map;
 	y = 0;
-    while (map[y])
-    {
-        x = 0;
-        while (map[y][x])
-        {
-            if (map[y][x] == '1')
-                draw_square(x * BLOCK, y * BLOCK, BLOCK, 0x0000FF, game);
-            x++;
-        }
-        y++;
-    }
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] == '1')
+				draw_square(x * BLOCK, y * BLOCK, BLOCK, 0x0000FF, game);
+			x++;
+		}
+		y++;
+	}
 }
 
 void draw_square(int x, int y, int size, int color, t_config *game)
 {
-    int i;
+	int i;
 
-    i = -1;
-    while (++i < size)
-        put_pixel(x + i, y, color, &game->frame);
-    i = -1;
-    while (++i < size)
-        put_pixel(x, y + i, color, &game->frame);
-    i = -1;
-    while (++i < size)
-        put_pixel(x + size, y + i, color, &game->frame);
-    i = -1;
-    while (++i < size)
-        put_pixel(x + i, y + size, color, &game->frame);
+	i = -1;
+	while (++i < size)
+		put_pixel(x + i, y, color, &game->frame);
+	i = -1;
+	while (++i < size)
+		put_pixel(x, y + i, color, &game->frame);
+	i = -1;
+	while (++i < size)
+		put_pixel(x + size, y + i, color, &game->frame);
+	i = -1;
+	while (++i < size)
+		put_pixel(x + i, y + size, color, &game->frame);
 }
 
 void clear_img(t_config *game)
 {
-    int y;
+	int y;
 	int	x;
 
 	y = 0;
-    while (y < WIN_H)
-    {
-        x = 0;
-        while (x < WIN_W)
-        {
-            put_pixel(x, y, 0, &game->frame);
-            x++;
-        }
-        y++;
-    }
+	while (y < WIN_H)
+	{
+		x = 0;
+		while (x < WIN_W)
+		{
+			put_pixel(x, y, 0, &game->frame);
+			x++;
+		}
+		y++;
+	}
 }

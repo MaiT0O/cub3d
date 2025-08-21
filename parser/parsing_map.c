@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/21 02:02:48 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 14:06:15 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,9 +142,9 @@ int	add_map_line(t_config *config, char *line)
 	new_map[map_height] = NULL;
 	free(config->map);
 	if (config->map_width < new_width)
-		config->map_width = new_width;
+	config->map_width = new_width;
 	if (!check_spawn(new_map, -1, -1))
-		return (0);
+	return (0);
 	config->map = new_map;
 	config->map_height = map_height;
 	return (1);

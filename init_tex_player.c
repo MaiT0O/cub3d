@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/21 02:21:04 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 13:54:44 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 void    load_textures(t_config *config, t_texture *tex, char *path)
 {
-    tex->img = mlx_xpm_file_to_image(config->mlx_ptr, path, &tex->width, &tex->height);
-    if (!tex->img)
-    {
-        printf("Error: failed to load texture: %s\n", path);
-        exit(EXIT_FAILURE);
-    }
-    tex->data = (int *)mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_length, &tex->endian);
+	tex->img = mlx_xpm_file_to_image(config->mlx_ptr, path, &tex->width, &tex->height);
+	if (!tex->img)
+	{
+		printf("Error: failed to load texture: %s\n", path);
+		exit(EXIT_FAILURE);
+	}
+	tex->data = (int *)mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_length, &tex->endian);
 }
 
 void    init_textures(t_config *config)
 {
-    load_textures(config, &config->textures[0], config->no_texture);
-    load_textures(config, &config->textures[1], config->so_texture);
-    load_textures(config, &config->textures[2], config->we_texture);
-    load_textures(config, &config->textures[3], config->ea_texture);
+	load_textures(config, &config->textures[0], config->no_texture);
+	load_textures(config, &config->textures[1], config->so_texture);
+	load_textures(config, &config->textures[2], config->we_texture);
+	load_textures(config, &config->textures[3], config->ea_texture);
 }
 
 void	check_boussole(t_player *player)
@@ -49,16 +49,14 @@ void	check_boussole(t_player *player)
 
 void	init_player(t_player *player)
 {
-	player->posX = player->mapX + 0.5;
-	player->posY = player->mapY + 0.5;
 	player->x = BLOCK * player->mapX;
-	player->y = BLOCK * player->mapX;
+	player->y = BLOCK * player->mapY;
 	player->key_up = false;
 	player->key_down = false;
 	player->key_right = false;
 	player->key_left = false;
 	player->left_rotate = false;
-    player->right_rotate = false;
+	player->right_rotate = false;
 	if (player->boussole == 'N')
 	{
 		player->dirX = 0;

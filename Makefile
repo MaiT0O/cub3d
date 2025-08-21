@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+         #
+#    By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/17 14:30:24 by ebansse           #+#    #+#              #
-#    Updated: 2025/08/06 19:01:14 by ebansse          ###   ########.fr        #
+#    Updated: 2025/08/21 13:36:01 by ebansse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c display.c free.c raycast.c render.c move.c init_tex_player.c
+SRCS = main.c display.c free.c render.c move.c init_tex_player.c
 PARSER_SRCS = parser/parsing.c parser/parsing_map.c
 
 OBJS = $(SRCS:.c=.o) $(PARSER_SRCS:.c=.o)

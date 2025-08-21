@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/21 02:00:31 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/08/21 13:53:16 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,19 +108,13 @@ int init_game(t_config *config)
 	config->mlx_ptr = mlx_init();
 	config->win_ptr = mlx_new_window(config->mlx_ptr, WIN_W, WIN_H, "cub3d");
 	config->frame.img = mlx_new_image(config->mlx_ptr, WIN_W, WIN_H);
-	config->frame.addr = mlx_get_data_addr(config->frame.img, &config->frame.bpp, &config->frame.line_length, &config->frame.endian);
-	mlx_put_image_to_window(config->mlx_ptr, config->win_ptr, config->frame.img, 0, 0);
-    return (0);
+	config->frame.addr = mlx_get_data_addr(config->frame.img, &config->frame.bpp
+		, &config->frame.line_length, &config->frame.endian);
+	mlx_put_image_to_window(config->mlx_ptr, config->win_ptr
+		, config->frame.img, 0, 0);
+	return (0);
 }
 
-bool	touch(float px, float py, t_config *game)
-{
-	int	x = px / BLOCK;
-	int	y = py / BLOCK;
-	if (game->map[y][x] == '1')
-		return (true);
-	return (false);
-}
 
 float distance(float x, float y)
 {
@@ -129,9 +123,9 @@ float distance(float x, float y)
 
 float fixed_dist(float delta_x,float delta_y, t_config *game)
 {
-    float angle = atan2(delta_y, delta_x) - game->player.angle;
-    float fix_dist = distance(delta_x, delta_y) * cos(angle);
-    return fix_dist;
+	float angle = atan2(delta_y, delta_x) - game->player.angle;
+	float fix_dist = distance(delta_x, delta_y) * cos(angle);
+	return fix_dist;
 }
 
 void	draw_floor_ceiling(t_config *game)
@@ -139,7 +133,7 @@ void	draw_floor_ceiling(t_config *game)
 	int x;
 	int y;
 	t_color *color;
-
+	
 	y = 0;
 	while (y < WIN_H)
 	{
@@ -156,27 +150,32 @@ void	draw_floor_ceiling(t_config *game)
 				color = &game->floor_color;
 				put_pixel_rgb(x, y, color, &game->frame);
 			}
+			x++;
 		}
+		y++;
 	}
 }
 
-void draw_line(t_player *player, t_config *game, float start_x, int i)
+bool	touch(float px, float py, t_config *game)
 {
-    float cos_angle = cos(start_x);
-    float sin_angle = sin(start_x);
-    float ray_x = player->x;
-    float ray_y = player->y;
+	int	x = px / BLOCK;
+	int	y = py / BLOCK;
+	if (game->map[y][x] == '1')
+		return (true);
+	return (false);
+}
 
-    while(!touch(ray_x, ray_y, game))
-    {
-        /*put_pixel(ray_x, ray_y, 0xFF0000, &game->frame);*/
-        ray_x += cos_angle;
-        ray_y += sin_angle;
-    }
-	float dist = fixed_dist(ray_x - player->x, ray_y - player->y, game);
-	float height = (BLOCK / dist) * (WIN_W / 2);
-	int	start_y = (WIN_H - height) / 2;
-	int	end = start_y + height;
+void	draw_wall(t_config *game, float ray_x, float ray_y, int i)
+{
+	float dist;
+	float height;
+	int	start_y;
+	int	end;
+
+	dist = fixed_dist(ray_x - game->player.x, ray_y - game->player.y, game);
+	height = (BLOCK / dist) * (WIN_W / 2);
+	start_y = (WIN_H - height) / 2;
+	end = start_y + height;
 	while(start_y < end)
 	{
 		put_pixel(i, start_y, 0x0000FF, &game->frame);
@@ -184,16 +183,40 @@ void draw_line(t_player *player, t_config *game, float start_x, int i)
 	}
 }
 
+void draw_line(t_player *player, t_config *game, float start_x, int i)
+{
+	float cos_angle;
+	float sin_angle;
+	float ray_x;
+	float ray_y;
+
+	cos_angle = cos(start_x);
+	sin_angle = sin(start_x);
+	ray_x = player->x;
+	ray_y = player->y;
+	while(!touch(ray_x, ray_y, game))
+	{
+		/*put_pixel(ray_x, ray_y, 0xFF0000, &game->frame);*/
+		ray_x += cos_angle;
+		ray_y += sin_angle;
+	}
+	draw_wall(game, ray_x, ray_y, i);
+}
+
 int	draw_loop(t_config *game)
 {
+	float fraction;
+	float start_x;
+	int	i;
+
 	move_player(&game->player);
 	clear_img(game);
-	/*draw_floor_ceiling(game);*/
+	draw_floor_ceiling(game);
 	/*draw_square(game->player.x, game->player.y, 10, 0x00FF00, game);
 	draw_map(game);*/
-	float fraction = PI / 3 / WIN_W;
-	float start_x = game->player.angle - PI / 6;
-	int	i = 0;
+	fraction = PI / 3 / WIN_W;
+	start_x = game->player.angle - PI / 6;
+	i = 0;
 	while (i < WIN_W)
 	{
 		draw_line(&game->player, game, start_x, i);
