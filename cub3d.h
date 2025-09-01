@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/21 13:22:49 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/01 17:35:42 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,10 @@ typedef struct s_config
 	char	*so_texture;
 	char	*we_texture;
 	char	*ea_texture;
+	int		wall_o;
+	int		tex_y;
+	int		tex_x;
+	
 }			t_config;
 /*parsing*/
 int			check_extension(char *filename);
@@ -138,6 +142,7 @@ void		raycasting(t_config *config, t_player *player, t_ray *ray);
 /*draw*/
 void    	put_pixel(int x, int y, int color, t_texture *frame);
 void    	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame);
+int			get_texture_pixel(t_texture *tex, int x, int y);
 int			rgb_to_hex(int r, int g, int b);
 void    	draw_square(int x, int y, int size, int color, t_config *game);
 void 		clear_img(t_config *game);

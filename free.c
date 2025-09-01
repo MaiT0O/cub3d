@@ -6,26 +6,28 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:53:21 by cguinot           #+#    #+#             */
-/*   Updated: 2025/07/17 15:01:18 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/01 18:27:36 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	free_textures(t_config *config)
+void	free_img(t_config *config)
 {
 	int	i;
 
 	i = 0;
-	while (i < 4) // 4 correspond au nombre de textures (NO, SO, WE, EA)
+	while (i < 4)
 	{
-		if (config->textures[i].img)
+		if (config->textures[i].img && config->mlx_ptr)
 		{
 			mlx_destroy_image(config->mlx_ptr, config->textures[i].img);
 			config->textures[i].img = NULL;
 		}
 		i++;
 	}
+    if (config->frame.img)
+        mlx_destroy_image(config->mlx_ptr, config->frame.img);
 }
 
 int	free_all(t_config *config)
@@ -33,7 +35,7 @@ int	free_all(t_config *config)
     int	i;
 
     // Libération des textures
-    /*free_textures(config);*/
+    free_img(config);
 
     // Libération des chemins de textures
     if (config->no_texture)
@@ -60,7 +62,7 @@ int	free_all(t_config *config)
     }
 
     // Destruction de la fenêtre et du display
-    if (config->win_ptr)
+    if (config->win_ptr && config->mlx_ptr)
     {
         mlx_destroy_window(config->mlx_ptr, config->win_ptr);
         config->win_ptr = NULL;
@@ -71,7 +73,6 @@ int	free_all(t_config *config)
         free(config->mlx_ptr);
         config->mlx_ptr = NULL;
     }
-
     exit(0);
     return (1);
 }

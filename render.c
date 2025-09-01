@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/21 13:54:15 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/01 17:08:43 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ void    put_pixel(int x, int y, int color, t_texture *frame)
 	frame->addr[index] = color & 0xFF;
 	frame->addr[index + 1] = (color >> 8) & 0xFF;
 	frame->addr[index + 2] = (color >> 16) & 0xFF;
+}
+
+int	get_texture_pixel(t_texture *tex, int x, int y)
+{
+	int	offset;
+    if (x < 0 || x >= tex->width || y < 0 || y >= tex->height)
+        return (0);
+    offset = y * tex->line_length + x * (tex->bpp / 8);
+    return (*(int *)(tex->addr + offset));
 }
 
 void    draw_map(t_config *game)

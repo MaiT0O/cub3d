@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/21 13:53:16 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/01 18:12:21 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	map_closed(t_config *config)
 	char	**visited;
 
 	i = 0;
-	j = 0;
 	visited = init_visited_array(config);
 	while (config->map[i] && i < config->map_height)
 	{
@@ -85,27 +84,29 @@ int	parsing(char *filename, t_config *config)
 
 int		initialisation(t_config *config, char **argv)
 {
+	config->mlx_ptr = NULL;
+	config->win_ptr = NULL;
 	init_config(config);
 	if (!parsing(argv[1], config))
 	{
+		printf("Error in map descriptor\n");
 		free_all(config);
-		return (printf("Error in map descriptor\n"), 0);
+		return (0);
 	}
 	if (!map_closed(config))
 	{
+		printf("Error in player or wall\n");
 		free_all(config);
-		return (printf("Error in player or wall\n"), 0);
+		return (0);
 	}
-	/*init_textures(config);*/
+	config->mlx_ptr = mlx_init();
+	init_textures(config);
 	init_player(&config->player);
-	printf("angle : %f\n", config->player.angle);
-	printf("boussole : %c\n", config->player.boussole);
 	return (1);
 }
 
 int init_game(t_config *config)
 {
-	config->mlx_ptr = mlx_init();
 	config->win_ptr = mlx_new_window(config->mlx_ptr, WIN_W, WIN_H, "cub3d");
 	config->frame.img = mlx_new_image(config->mlx_ptr, WIN_W, WIN_H);
 	config->frame.addr = mlx_get_data_addr(config->frame.img, &config->frame.bpp
@@ -171,15 +172,42 @@ void	draw_wall(t_config *game, float ray_x, float ray_y, int i)
 	float height;
 	int	start_y;
 	int	end;
+	int	color;
 
 	dist = fixed_dist(ray_x - game->player.x, ray_y - game->player.y, game);
 	height = (BLOCK / dist) * (WIN_W / 2);
 	start_y = (WIN_H - height) / 2;
 	end = start_y + height;
+	if (game->wall_o == NORTH || game->wall_o == SOUTH)
+        game->tex_x = (int)ray_x % game->textures[game->wall_o].width;
+	else
+        game->tex_x = (int)ray_y % game->textures[game->wall_o].width;
 	while(start_y < end)
 	{
-		put_pixel(i, start_y, 0x0000FF, &game->frame);
+		game->tex_y = ((start_y - (WIN_H - height) / 2)
+			 * game->textures[game->wall_o].height) / height;
+		color = get_texture_pixel(&game->textures[game->wall_o]
+			, game->tex_x, game->tex_y);
+		put_pixel(i, start_y, color, &game->frame);
 		start_y++;
+	}
+}
+
+void	orientation(float ray_x, float cos, float sin, t_config *game)
+{
+	if ((int)(ray_x / BLOCK) != (int)((ray_x - cos) / BLOCK))
+	{
+		if (cos > 0)
+			game->wall_o = EAST;
+		else
+			game->wall_o = WEST;
+	}
+	else
+	{
+		if (sin > 0)
+			game->wall_o = SOUTH;
+		else
+			game->wall_o = NORTH;
 	}
 }
 
@@ -200,6 +228,7 @@ void draw_line(t_player *player, t_config *game, float start_x, int i)
 		ray_x += cos_angle;
 		ray_y += sin_angle;
 	}
+	orientation(ray_x, cos_angle, sin_angle, game);
 	draw_wall(game, ray_x, ray_y, i);
 }
 

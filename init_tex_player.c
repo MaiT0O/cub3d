@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tex_player.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/21 13:54:44 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/01 16:33:39 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void    load_textures(t_config *config, t_texture *tex, char *path)
 		printf("Error: failed to load texture: %s\n", path);
 		exit(EXIT_FAILURE);
 	}
-	tex->data = (int *)mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_length, &tex->endian);
+	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_length, &tex->endian);
 }
 
 void    init_textures(t_config *config)
