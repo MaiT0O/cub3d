@@ -6,33 +6,30 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/01 17:08:43 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/02 13:37:07 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void    put_pixel_rgb(int x, int y, t_color *color, t_texture *frame)
+void	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame)
 {
-	int index;
+	int	index;
 
 	if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
-		return;
-
+		return ;
 	index = y * frame->line_length + x * (frame->bpp / 8);
-
 	frame->addr[index] = color->b & 0xFF;
 	frame->addr[index + 1] = color->g & 0xFF;
 	frame->addr[index + 2] = color->r & 0xFF;
 }
 
-void    put_pixel(int x, int y, int color, t_texture *frame)
+void	put_pixel(int x, int y, int color, t_texture *frame)
 {
-	int index;
+	int	index;
 
 	if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
 		return ;
-
 	index = y * frame->line_length + x * frame->bpp / 8;
 	frame->addr[index] = color & 0xFF;
 	frame->addr[index + 1] = (color >> 8) & 0xFF;
@@ -42,54 +39,44 @@ void    put_pixel(int x, int y, int color, t_texture *frame)
 int	get_texture_pixel(t_texture *tex, int x, int y)
 {
 	int	offset;
-    if (x < 0 || x >= tex->width || y < 0 || y >= tex->height)
-        return (0);
-    offset = y * tex->line_length + x * (tex->bpp / 8);
-    return (*(int *)(tex->addr + offset));
+
+	if (x < 0 || x >= tex->width || y < 0 || y >= tex->height)
+		return (0);
+	offset = y * tex->line_length + x * (tex->bpp / 8);
+	return (*(int *)(tex->addr + offset));
 }
 
-void    draw_map(t_config *game)
+void	draw_floor_ceiling(t_config *game)
 {
-	char    **map;
-	int y;
-	int	x;
+	int		x;
+	int		y;
+	t_color	*color;
 
-	map = game->map;
 	y = 0;
-	while (map[y])
+	while (y < WIN_H)
 	{
 		x = 0;
-		while (map[y][x])
+		while (x < WIN_W)
 		{
-			if (map[y][x] == '1')
-				draw_square(x * BLOCK, y * BLOCK, BLOCK, 0x0000FF, game);
+			if (y < WIN_H / 2)
+			{
+				color = &game->ceiling_color;
+				put_pixel_rgb(x, y, color, &game->frame);
+			}
+			else
+			{
+				color = &game->floor_color;
+				put_pixel_rgb(x, y, color, &game->frame);
+			}
 			x++;
 		}
 		y++;
 	}
 }
 
-void draw_square(int x, int y, int size, int color, t_config *game)
+void	clear_img(t_config *game)
 {
-	int i;
-
-	i = -1;
-	while (++i < size)
-		put_pixel(x + i, y, color, &game->frame);
-	i = -1;
-	while (++i < size)
-		put_pixel(x, y + i, color, &game->frame);
-	i = -1;
-	while (++i < size)
-		put_pixel(x + size, y + i, color, &game->frame);
-	i = -1;
-	while (++i < size)
-		put_pixel(x + i, y + size, color, &game->frame);
-}
-
-void clear_img(t_config *game)
-{
-	int y;
+	int	y;
 	int	x;
 
 	y = 0;

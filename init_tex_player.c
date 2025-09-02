@@ -6,24 +6,26 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/01 16:33:39 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/02 13:53:58 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void    load_textures(t_config *config, t_texture *tex, char *path)
+void	load_textures(t_config *config, t_texture *tex, char *path)
 {
-	tex->img = mlx_xpm_file_to_image(config->mlx_ptr, path, &tex->width, &tex->height);
+	tex->img = mlx_xpm_file_to_image(config->mlx_ptr, path, &tex->width,
+			&tex->height);
 	if (!tex->img)
 	{
 		printf("Error: failed to load texture: %s\n", path);
 		exit(EXIT_FAILURE);
 	}
-	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_length, &tex->endian);
+	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp,
+			&tex->line_length, &tex->endian);
 }
 
-void    init_textures(t_config *config)
+void	init_textures(t_config *config)
 {
 	load_textures(config, &config->textures[0], config->no_texture);
 	load_textures(config, &config->textures[1], config->so_texture);
@@ -47,7 +49,7 @@ void	check_boussole(t_player *player)
 	}
 }
 
-void	init_player(t_player *player)
+void	init_player(t_player *player, t_config *game)
 {
 	player->x = BLOCK * player->mapX;
 	player->y = BLOCK * player->mapY;
@@ -57,6 +59,7 @@ void	init_player(t_player *player)
 	player->key_left = false;
 	player->left_rotate = false;
 	player->right_rotate = false;
+	player->game = game;
 	if (player->boussole == 'N')
 	{
 		player->dirX = 0;

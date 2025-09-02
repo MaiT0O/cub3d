@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/01 17:35:42 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/02 13:56:44 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_player
 	bool	key_left;
 	bool	left_rotate;
 	bool	right_rotate;
+	t_config	*game;
 }   t_player;
 
 typedef struct s_ray
@@ -127,7 +128,7 @@ int			flood_fill(t_config *map, char **visited, int x, int y);
 char		**init_visited_array(t_config *map);
 /*init*/
 void		init_config(t_config *config);
-void		init_player(t_player *player);
+void		init_player(t_player *player, t_config *game);
 void    	init_textures(t_config *config);
 // pour afficher les stats de la map
 void		display_config(t_config *config);
@@ -138,15 +139,14 @@ void		free_textures(t_config *config);
 int			free_all(t_config *config);
 
 /*raycasting*/
-void		raycasting(t_config *config, t_player *player, t_ray *ray);
+int	draw_loop(t_config *game);
+bool	touch(float px, float py, t_config *game);
 /*draw*/
 void    	put_pixel(int x, int y, int color, t_texture *frame);
 void    	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame);
 int			get_texture_pixel(t_texture *tex, int x, int y);
-int			rgb_to_hex(int r, int g, int b);
-void    	draw_square(int x, int y, int size, int color, t_config *game);
 void 		clear_img(t_config *game);
-void    	draw_map(t_config *game);
+void		draw_floor_ceiling(t_config *game);
 /*hook*/
 int 		key_press(int keycode, t_config *config);
 int 		key_release(int keycode, t_player *player);

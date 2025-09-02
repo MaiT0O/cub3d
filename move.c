@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 17:58:15 by ebansse           #+#    #+#             */
-/*   Updated: 2025/08/21 13:58:02 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/02 13:47:02 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,15 @@ int key_release(int keycode, t_player *player)
 
 void	move_step(t_player *player, float cos_angle, float sin_angle, int speed)
 {
+	int	x;
+	int	y;
+
+	x = player->x;
+	y = player->y;
 	if (player->key_up)
 	{
-		player->x += cos_angle * speed;
-		player->y += sin_angle * speed;
+		x += cos_angle * speed;
+		y += sin_angle * speed;
 	}
 	if (player->key_down)
 	{
@@ -77,11 +82,15 @@ void	move_step(t_player *player, float cos_angle, float sin_angle, int speed)
 
 void    move_player(t_player *player)
 {
-	int speed = 3;
-	float angle_speed = 0.03;
-	float cos_angle = cos(player->angle);
-	float sin_angle = sin(player->angle);
+	int		speed;
+	float	angle_speed;
+	float	cos_angle;
+	float	sin_angle;
 
+	speed = 3;
+	angle_speed = 0.03;
+	cos_angle = cos(player->angle);
+	sin_angle = sin(player->angle);
 	if (player->left_rotate)
 		player->angle -= angle_speed;
 	if (player->right_rotate)
@@ -90,6 +99,5 @@ void    move_player(t_player *player)
 		player->angle = 0;
 	if (player->angle < 0)
 		player->angle = 2 * PI;
-
 	move_step(player, cos_angle, sin_angle, speed);
 }
