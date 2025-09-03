@@ -6,7 +6,7 @@
 #    By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/17 14:30:24 by ebansse           #+#    #+#              #
-#    Updated: 2025/09/02 13:28:57 by ebansse          ###   ########.fr        #
+#    Updated: 2025/09/03 13:21:51 by ebansse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,10 +20,11 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c display.c free.c render.c move.c init_tex_player.c raycast.c
+SRCS = main.c display.c free.c render.c move.c init_tex_player.c
 PARSER_SRCS = parser/parsing.c parser/parsing_map.c
+RAYCAST_SRCS = raycasting/raycast.c raycasting/utils_ray.c
 
-OBJS = $(SRCS:.c=.o) $(PARSER_SRCS:.c=.o)
+OBJS = $(SRCS:.c=.o) $(PARSER_SRCS:.c=.o) $(RAYCAST_SRCS:.c=.o)
 
 RED = \033[0;31m
 GREEN = \033[0;32m

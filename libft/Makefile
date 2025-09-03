@@ -43,26 +43,26 @@ BONUS_OBJS   = ${BONUS:.c=.o}
 
 # Règles de compilation
 %.o: %.c
-	${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} -c $< -o $@
 
 # Règle pour créer la libft.a
 ${NAME}: ${OBJS}
-	${AR} ${NAME} ${OBJS}
+	@${AR} ${NAME} ${OBJS}
 
 # Règle pour la version bonus
 bonus: ${OBJS} ${BONUS_OBJS}
-	${AR} ${NAME} ${OBJS} ${BONUS_OBJS}
+	@${AR} ${NAME} ${OBJS} ${BONUS_OBJS}
 
 # Règle par défaut
 all: ${NAME}
 
 # Nettoyer les fichiers objets
 clean:
-	rm -f ${OBJS} ${BONUS_OBJS}
+	@rm -f ${OBJS} ${BONUS_OBJS}
 
 # Nettoyer et supprimer la librairie
 fclean: clean
-	rm -f ${NAME}
+	@rm -f ${NAME}
 
 # Recompiler complètement
 re: fclean all

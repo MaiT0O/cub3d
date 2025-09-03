@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/02 13:53:58 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/03 15:11:44 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,40 +37,39 @@ void	check_boussole(t_player *player)
 {
 	if (player->boussole == 'E')
 	{
-		player->dirX = 1;
-		player->dirY = 0;
-		player->angle = atan2(player->dirY, player->dirX);
+		player->dir_x = 1;
+		player->dir_y = 0;
+		player->angle = atan2(player->dir_y, player->dir_x);
 	}
 	else if (player->boussole == 'W')
 	{
-		player->dirX = -1;
-		player->dirY = 0;
-		player->angle = atan2(player->dirY, player->dirX);
+		player->dir_x = -1;
+		player->dir_y = 0;
+		player->angle = atan2(player->dir_y, player->dir_x);
 	}
 }
 
-void	init_player(t_player *player, t_config *game)
+void	init_player(t_player *player)
 {
-	player->x = BLOCK * player->mapX;
-	player->y = BLOCK * player->mapY;
+	player->x = BLOCK * player->map_x;
+	player->y = BLOCK * player->map_y;
 	player->key_up = false;
 	player->key_down = false;
 	player->key_right = false;
 	player->key_left = false;
 	player->left_rotate = false;
 	player->right_rotate = false;
-	player->game = game;
 	if (player->boussole == 'N')
 	{
-		player->dirX = 0;
-		player->dirY = -1;
-		player->angle = atan2(player->dirY, player->dirX);
+		player->dir_x = 0;
+		player->dir_y = -1;
+		player->angle = atan2(player->dir_y, player->dir_x);
 	}
 	else if (player->boussole == 'S')
 	{
-		player->dirX = 0;
-		player->dirY = 1;
-		player->angle = atan2(player->dirY, player->dirX);
+		player->dir_x = 0;
+		player->dir_y = 1;
+		player->angle = atan2(player->dir_y, player->dir_x);
 	}
 	else
 		check_boussole(player);
@@ -91,4 +90,5 @@ void	init_config(t_config *config)
 	config->ceiling_color.r = -1;
 	config->ceiling_color.g = -1;
 	config->ceiling_color.b = -1;
+	config->speed = 7;
 }

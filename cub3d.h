@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/02 13:56:44 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/03 15:19:23 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_color
 	int		r;
 	int		g;
 	int		b;
-}			t_color;
+}	t_color;
 
 typedef enum e_cardinal_direction
 {
@@ -40,16 +40,16 @@ typedef enum e_cardinal_direction
 
 typedef struct s_player
 {
-	int		mapX;
-	int		mapY;
+	int		map_x;
+	int		map_y;
 	float	x;
 	float	y;
+	int		tmp_x;
+	int		tmp_y;
 	float	angle;
 
-    double dirX;
-    double dirY;
-    double planeX;
-    double planeY;
+	double	dir_x;
+	double	dir_y;
 
 	char	boussole;
 
@@ -59,104 +59,89 @@ typedef struct s_player
 	bool	key_left;
 	bool	left_rotate;
 	bool	right_rotate;
-	t_config	*game;
-}   t_player;
-
-typedef struct s_ray
-{
-    double dirX;      // direction du rayon
-    double dirY;
-    double sideDistX;
-    double sideDistY;
-    double deltaDistX;
-    double deltaDistY;
-    double perpWallDist;
-    int stepX;
-    int stepY;
-    int mapX;
-    int mapY;
-	double wallX;
-}	t_ray;
+}	t_player;
 
 typedef struct s_texture
 {
-    void    *img;
-    int     *data;
+	void	*img;
+	int		*data;
 	char	*addr;
-    int		bpp;
+	int		bpp;
 	int		line_length;
 	int		endian;
-	int     width;
-    int     height;
-}   t_texture;
+	int		width;
+	int		height;
+}	t_texture;
 
 typedef struct s_config
 {
-	void    *mlx_ptr;
-    void    *win_ptr;
-	int		win_w;
-	int 	win_h;
-	t_color	floor_color;
-	t_color	ceiling_color;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			win_w;
+	int			win_h;
+	t_color		floor_color;
+	t_color		ceiling_color;
 	t_player	player;
-	t_ray		ray;
 	t_texture	textures[4];
 	t_texture	frame;
-	char	**map;
-	int		map_height;
-	int		map_width;
-	char	*no_texture;
-	char	*so_texture;
-	char	*we_texture;
-	char	*ea_texture;
-	int		wall_o;
-	int		tex_y;
-	int		tex_x;
-	
-}			t_config;
+	char		**map;
+	int			map_height;
+	int			map_width;
+	char		*no_texture;
+	char		*so_texture;
+	char		*we_texture;
+	char		*ea_texture;
+	int			wall_o;
+	int			tex_y;
+	int			tex_x;
+	int			speed;
+}	t_config;
+
 /*parsing*/
-int			check_extension(char *filename);
-int			valid_text(char **texture, char *identifier, char *line);
-int			valid_text_2(void);
-int			text_parse(t_config *config, char *line);
-int			parsing(char *filename, t_config *config);
+int		check_extension(char *filename);
+int		valid_text(char **texture, char *identifier, char *line);
+int		valid_text_2(void);
+int		text_parse(t_config *config, char *line);
+int		parsing(char *filename, t_config *config);
 
-int			add_map_line(t_config *config, char *line);
-int			is_map_line(char *line);
+int		add_map_line(t_config *config, char *line);
+int		is_map_line(char *line);
 
-int			flood_fill(t_config *map, char **visited, int x, int y);
-char		**init_visited_array(t_config *map);
+int		flood_fill(t_config *map, char **visited, int x, int y);
+char	**init_visited_array(t_config *map);
 /*init*/
-void		init_config(t_config *config);
-void		init_player(t_player *player, t_config *game);
-void    	init_textures(t_config *config);
-// pour afficher les stats de la map
-void		display_config(t_config *config);
-void		display_map(t_config *config);
+void	init_config(t_config *config);
+void	init_player(t_player *player);
+void	init_textures(t_config *config);
+/*stats de la map*/
+void	display_config(t_config *config);
+void	display_map(t_config *config);
 
 /*free*/
-void		free_textures(t_config *config);
-int			free_all(t_config *config);
+void	free_visited(char **visited, int height);
+int		free_all(t_config *config);
 
 /*raycasting*/
-int	draw_loop(t_config *game);
-bool	touch(float px, float py, t_config *game);
-/*draw*/
-void    	put_pixel(int x, int y, int color, t_texture *frame);
-void    	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame);
-int			get_texture_pixel(t_texture *tex, int x, int y);
-void 		clear_img(t_config *game);
-void		draw_floor_ceiling(t_config *game);
-/*hook*/
-int 		key_press(int keycode, t_config *config);
-int 		key_release(int keycode, t_player *player);
-void    	move_player(t_player *player);
+int		draw_loop(t_config *game);
 
-# define WIN_H 720
-# define WIN_W 1280
-# define WALL_COLOR 0xFF2222
-# define FLOOR_COLOR 0x222222
-# define CEILING_COLOR 0xCCCCCC
+/*utils_ray*/
+float	distance(float x, float y);
+float	fixed_dist(float delta_x, float delta_y, t_config *game);
+bool	touch(float px, float py, t_config *game);
+
+/*draw*/
+void	put_pixel(int x, int y, int color, t_texture *frame);
+void	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame);
+int		get_texture_pixel(t_texture *tex, int x, int y);
+void	clear_img(t_config *game);
+void	draw_floor_ceiling(t_config *game);
+/*hook*/
+int		key_press(int keycode, t_config *config);
+int		key_release(int keycode, t_player *player);
+void	move_player(t_player *player, t_config *game);
+
+# define WIN_H 800
+# define WIN_W 2000
 # define W 119
 # define A 97
 # define S 115

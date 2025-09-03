@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/21 14:06:15 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/03 14:13:40 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,6 @@ char	**init_visited_array(t_config *map)
 	}
 	init_array_values(visited, map);
 	return (visited);
-}
-
-int	flood_fill(t_config *map, char **visited, int x, int y)
-{
-	if (map->map[y][x] == ' ')
-	{
-		return (0);
-	}
-	if (x < 0 || x >= map->map_width || y < 0 || y >= map->map_height)
-		return (0);
-	if (map->map[y][x] == '0' && (y == 0 || x == 0 || y == map->map_height - 1
-		|| x == map->map_width - 1))
-	{
-		return (0);
-	}
-	if (x < 0 || x >= map->map_width || y < 0 || y >= map->map_height
-		|| visited[y][x] == '1' || map->map[y][x] == '1')
-		return (1);
-	visited[y][x] = '1';
-	return (flood_fill(map, visited, x + 1, y)
-		&& flood_fill(map, visited, x - 1, y)
-		&& flood_fill(map, visited, x, y + 1)
-		&& flood_fill(map, visited, x, y - 1));
-	return (1);
 }
 
 int	is_map_line(char *line)
@@ -142,9 +118,9 @@ int	add_map_line(t_config *config, char *line)
 	new_map[map_height] = NULL;
 	free(config->map);
 	if (config->map_width < new_width)
-	config->map_width = new_width;
+		config->map_width = new_width;
 	if (!check_spawn(new_map, -1, -1))
-	return (0);
+		return (0);
 	config->map = new_map;
 	config->map_height = map_height;
 	return (1);

@@ -6,13 +6,13 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:53:17 by cguinot           #+#    #+#             */
-/*   Updated: 2025/08/06 18:55:01 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/03 13:45:08 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	display_config(t_config *config)
+/*void	display_config(t_config *config)
 {
 	printf("NO: %s\n", config->no_texture ? config->no_texture : "NULL");
 	printf("SO: %s\n", config->so_texture ? config->so_texture : "NULL");
@@ -23,6 +23,9 @@ void	display_config(t_config *config)
 		config->floor_color.g, config->floor_color.b);
 	printf("Ceiling: R=%d G=%d B=%d\n", config->ceiling_color.r,
 		config->ceiling_color.g, config->ceiling_color.b);
+	printf("map width : %d / map_heigth : %d\n", config.map_width,
+		config.map_height);
+
 }
 
 void	display_map(t_config *config)
@@ -47,4 +50,4 @@ void	display_map(t_config *config)
 		i++;
 	}
 	ft_putendl_fd("--- End of map ---", 1);
-}
+}*/

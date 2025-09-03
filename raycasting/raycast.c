@@ -6,40 +6,19 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 13:28:31 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/02 13:32:27 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/03 13:43:18 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-
-float distance(float x, float y)
-{
-	return (sqrt(x * x + y * y));
-}
-
-float fixed_dist(float delta_x,float delta_y, t_config *game)
-{
-	float angle = atan2(delta_y, delta_x) - game->player.angle;
-	float fix_dist = distance(delta_x, delta_y) * cos(angle);
-	return fix_dist;
-}
-
-bool	touch(float px, float py, t_config *game)
-{
-	int	x = px / BLOCK;
-	int	y = py / BLOCK;
-	if (game->map[y][x] == '1')
-		return (true);
-	return (false);
-}
+#include "../cub3d.h"
 
 void	draw_wall(t_config *game, float ray_x, float ray_y, int i)
 {
-	float dist;
-	float height;
-	int	start_y;
-	int	end;
-	int	color;
+	float	dist;
+	float	height;
+	int		start_y;
+	int		end;
+	int		color;
 
 	dist = fixed_dist(ray_x - game->player.x, ray_y - game->player.y, game);
 	height = (BLOCK / dist) * (WIN_W / 2);
@@ -49,12 +28,12 @@ void	draw_wall(t_config *game, float ray_x, float ray_y, int i)
 		game->tex_x = (int)ray_x % game->textures[game->wall_o].width;
 	else
 		game->tex_x = (int)ray_y % game->textures[game->wall_o].width;
-	while(start_y < end)
+	while (start_y < end)
 	{
 		game->tex_y = ((start_y - (WIN_H - height) / 2)
-			 * game->textures[game->wall_o].height) / height;
-		color = get_texture_pixel(&game->textures[game->wall_o]
-			, game->tex_x, game->tex_y);
+				* game->textures[game->wall_o].height) / height;
+		color = get_texture_pixel(&game->textures[game->wall_o],
+				game->tex_x, game->tex_y);
 		put_pixel(i, start_y, color, &game->frame);
 		start_y++;
 	}
@@ -78,20 +57,19 @@ void	orientation(float ray_x, float cos, float sin, t_config *game)
 	}
 }
 
-void draw_line(t_player *player, t_config *game, float start_x, int i)
+void	draw_line(t_player *player, t_config *game, float start_x, int i)
 {
-	float cos_angle;
-	float sin_angle;
-	float ray_x;
-	float ray_y;
+	float	cos_angle;
+	float	sin_angle;
+	float	ray_x;
+	float	ray_y;
 
 	cos_angle = cos(start_x);
 	sin_angle = sin(start_x);
 	ray_x = player->x;
 	ray_y = player->y;
-	while(!touch(ray_x, ray_y, game))
+	while (!touch(ray_x, ray_y, game))
 	{
-		/*put_pixel(ray_x, ray_y, 0xFF0000, &game->frame);*/
 		ray_x += cos_angle;
 		ray_y += sin_angle;
 	}
@@ -101,15 +79,13 @@ void draw_line(t_player *player, t_config *game, float start_x, int i)
 
 int	draw_loop(t_config *game)
 {
-	float fraction;
-	float start_x;
-	int	i;
+	float	fraction;
+	float	start_x;
+	int		i;
 
-	move_player(&game->player);
+	move_player(&game->player, game);
 	clear_img(game);
 	draw_floor_ceiling(game);
-	/*draw_square(game->player.x, game->player.y, 10, 0x00FF00, game);
-	draw_map(game);*/
 	fraction = PI / 3 / WIN_W;
 	start_x = game->player.angle - PI / 6;
 	i = 0;
@@ -117,8 +93,9 @@ int	draw_loop(t_config *game)
 	{
 		draw_line(&game->player, game, start_x, i);
 		start_x += fraction;
-		i++;		
+		i++;
 	}
-	mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->frame.img, 0, 0);
+	mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
+		game->frame.img, 0, 0);
 	return (0);
 }
