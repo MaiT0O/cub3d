@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:16 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/08 18:23:31 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/09/08 23:58:02 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,13 +124,12 @@ int	text_parse(t_config *config, char *line, int textcount)
 	if (is_map_line(line))
 	{
 		if (textcount == 6)
-		{
-			add_map_line (config, line);
-			return (0);
-		}
+			return (add_map_line(config, line), 0);
 		else
-			return (
-				printf("Error \nmap before arguments or not enough args"), 2);
+			return (printf("Error\nmap before arguments or not enough args")
+				, 2);
 	}
+	if (!is_only_whitespace(line))
+		return (2);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/08 18:23:48 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/09/08 23:46:55 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,9 @@ int		is_map_line(char *line);
 
 int		flood_fill(t_config *map, char **visited, int x, int y);
 char	**init_visited_array(t_config *map);
+int		is_only_whitespace(char *line);
+int		check_unknown_argument(char *line);
+
 /*init*/
 void	init_config(t_config *config);
 void	init_player(t_player *player);
