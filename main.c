@@ -3,22 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/03 15:12:04 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:46:30 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	map_closed(t_config *config)
+int	map_closed(t_config *config, int i, int j)
 {
-	int		i;
-	int		j;
 	char	**visited;
 
-	i = 0;
 	visited = init_visited_array(config);
 	while (config->map[i] && i < config->map_height)
 	{
@@ -28,6 +25,9 @@ int	map_closed(t_config *config)
 			if (config->map[i][j] == 'N' || config->map[i][j] == 'S'
 				|| config->map[i][j] == 'E' || config->map[i][j] == 'W')
 			{
+				if (config->player.map_x != -1 && config->player.map_y != -1)
+					return (printf("Error\ndouble player detected"),
+						free_visited(visited, config-> map_height), 0);
 				config->player.map_x = j;
 				config->player.map_y = i;
 				config->player.boussole = config->map[i][j];
@@ -46,26 +46,27 @@ int	parsing(char *filename, t_config *config)
 	char	*line;
 	int		text_count;
 	int		fd;
+	int		res;
 
 	text_count = 0;
 	if (!check_extension(filename))
-		return (1);
+		return (0);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		return (printf("Error cannot open file \n"), 0);
+		return (printf("Error\ncannot open file"), 0);
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		if (text_parse(config, line))
+		res = text_parse(config, line, text_count);
+		if (res == 1)
 			text_count += 1;
+		else if (res == 2)
+			return (free(line), close(fd), 0);
 		free(line);
 		line = get_next_line(fd);
 	}
-	if (text_count != 6)
-	{
-		printf("Error not enough textures \n");
-		return (0);
-	}
+	if (config->map_height <= 0)
+		return (printf("Error\nNo map"), free(line), close(fd), 0);
 	return (free(line), close(fd), 1);
 }
 
@@ -73,18 +74,23 @@ int	initialisation(t_config *config, char **argv)
 {
 	config->mlx_ptr = NULL;
 	config->win_ptr = NULL;
+	config->player.map_x = -1;
+	config->player.map_y = -1;
 	init_config(config);
 	if (!parsing(argv[1], config))
 	{
-		printf("Error in map descriptor\n");
 		free_all(config);
 		return (0);
 	}
-	if (!map_closed(config))
+	if (!map_closed(config, 0, 0))
 	{
-		printf("Error in player or wall\n");
+		printf ("Error\nplayer position or wall");
 		free_all(config);
 		return (0);
+	}
+	if (config->player.map_x == -1)
+	{
+		return (printf ("Error\nNo player"), free_all (config), 0);
 	}
 	config->mlx_ptr = mlx_init();
 	init_textures(config);
@@ -108,8 +114,9 @@ int	main(int argc, char **argv)
 {
 	t_config	config;
 
+	ft_memset(&config, 0, sizeof(config));
 	if (argc != 2)
-		return (printf("Error format ./cub3d [map_file] \n"), 0);
+		return (printf("Error\nformat ./cub3d [map_file]"), 0);
 	else
 	{
 		if (initialisation(&config, argv))

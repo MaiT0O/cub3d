@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/03 14:13:40 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:41:15 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,31 +74,6 @@ int	is_map_line(char *line)
 	return (has_map_char);
 }
 
-int	check_spawn(char **map, int i, int j)
-{
-	int	found;
-
-	found = 0;
-	while (map[++i])
-	{
-		while (map[i][++j])
-		{
-			if (map[i][j] == 'N' || map[i][j] == 'S'
-				|| map[i][j] == 'E' || map[i][j] == 'W')
-			{
-				if (found)
-				{
-					ft_putendl_fd("Error: multiple player positions\n", 2);
-					exit(EXIT_FAILURE);
-					return (0);
-				}
-				found = 1;
-			}
-		}
-	}
-	return (1);
-}
-
 int	add_map_line(t_config *config, char *line)
 {
 	int		i;
@@ -119,8 +94,6 @@ int	add_map_line(t_config *config, char *line)
 	free(config->map);
 	if (config->map_width < new_width)
 		config->map_width = new_width;
-	if (!check_spawn(new_map, -1, -1))
-		return (0);
 	config->map = new_map;
 	config->map_height = map_height;
 	return (1);

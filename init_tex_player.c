@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tex_player.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/03 15:11:44 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:23:54 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	init_player(t_player *player)
 	{
 		player->dir_x = 0;
 		player->dir_y = -1;
-		player->angle = atan2(player->dir_y, player->dir_x);
+		player->angle = atan2(player->dir_y, player->dir_x) * -3;
 	}
 	else if (player->boussole == 'S')
 	{

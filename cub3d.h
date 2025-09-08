@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/03 15:19:23 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:23:48 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ typedef struct s_config
 int		check_extension(char *filename);
 int		valid_text(char **texture, char *identifier, char *line);
 int		valid_text_2(void);
-int		text_parse(t_config *config, char *line);
+int		text_parse(t_config *config, char *line, int textcount);
 int		parsing(char *filename, t_config *config);
 
 int		add_map_line(t_config *config, char *line);
@@ -120,7 +120,7 @@ void	display_map(t_config *config);
 /*free*/
 void	free_visited(char **visited, int height);
 int		free_all(t_config *config);
-
+void	free_tab(char **tab);
 /*raycasting*/
 int		draw_loop(t_config *game);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:16 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/03 14:13:45 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:23:31 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ int	check_extension(char *filename)
 		return (0);
 	if (ft_strncmp(filename + len - 4, ".cub", 4) != 0)
 	{
-		printf("Error wrong extension \n");
-		return (0);
+		printf("Error\nwrong extension \n");
+		return (2);
 	}
 	return (1);
 }
@@ -62,16 +62,16 @@ int	valid_text(char **texture, char *identifier, char *line)
 	fd = open(trimmed_path, O_RDONLY);
 	if (fd < 0)
 	{
-		printf("Error cannot open texture \n");
+		printf("Error\ncannot open texture");
 		free(trimmed_path);
-		return (0);
+		return (2);
 	}
 	close(fd);
 	if (*texture != NULL)
 	{
-		printf("Error double path assignation \n");
+		printf("Error\ndouble path assignation");
 		free(trimmed_path);
-		return (0);
+		return (2);
 	}
 	*texture = ft_strdup(trimmed_path);
 	free(trimmed_path);
@@ -81,32 +81,33 @@ int	valid_text(char **texture, char *identifier, char *line)
 int	valid_color(t_color *color, char *line)
 {
 	char	**rgb;
-	int		*rgb_int;
-	char	*temp[3];
+	int		*rgb_i;
+	char	*t[3];
 
 	if (color->r != -1)
-		return (printf("Error double color assignation \n"), 0);
-	rgb_int = malloc(sizeof(int) * 3);
+		return (printf("Error\ndouble color assignation \n"), 2);
+	rgb_i = malloc(sizeof(int) * 3);
 	rgb = ft_split(line + 2, ',');
-	temp[0] = ft_strtrim(rgb[0], " \t\n\r");
-	temp[1] = ft_strtrim(rgb[1], " \t\n\r");
-	temp[2] = ft_strtrim(rgb[2], " \t\n\r");
-	rgb_int[0] = ft_atoi(temp[0]);
-	rgb_int[1] = ft_atoi(temp[1]);
-	rgb_int[2] = ft_atoi(temp[2]);
-	if (rgb_int[0] < 0 || rgb_int[0] > 255 || rgb_int[1] < 0 || rgb_int[1] > 255
-		|| rgb_int[2] < 0 || rgb_int[2] > 255)
-		return (free(temp[0]), free(temp[1]), free(temp[2]),
-			free(rgb[0]), free(rgb[1]), free(rgb[2]), free(rgb), free(rgb_int),
-			printf("Error color problem \n"), 0);
-	color->r = rgb_int[0];
-	color->g = rgb_int[1];
-	color->b = rgb_int[2];
-	return (free(temp[0]), free(temp[1]), free(temp[2]),
-		free(rgb[0]), free(rgb[1]), free(rgb[2]), free(rgb), free(rgb_int), 1);
+	if (!rgb[2])
+		return (free_tab(rgb), free(rgb_i),
+			printf("Error\nnot enough color"), 2);
+	t[0] = ft_strtrim(rgb[0], " \t\n\r");
+	t[1] = ft_strtrim(rgb[1], " \t\n\r");
+	t[2] = ft_strtrim(rgb[2], " \t\n\r");
+	rgb_i[0] = ft_atoi(t[0]);
+	rgb_i[1] = ft_atoi(t[1]);
+	rgb_i[2] = ft_atoi(t[2]);
+	if (rgb_i[0] < 0 || rgb_i[0] > 255 || rgb_i[1] < 0 || rgb_i[1] > 255
+		|| rgb_i[2] < 0 || rgb_i[2] > 255)
+		return (free(t[0]), free(t[1]), free(t[2]),
+			free_tab(rgb), free(rgb_i), printf("Error\ncolor problem"), 2);
+	color->r = rgb_i[0];
+	color->g = rgb_i[1];
+	color->b = rgb_i[2];
+	return (free(t[0]), free(t[1]), free(t[2]), free_tab(rgb), free(rgb_i), 1);
 }
 
-int	text_parse(t_config *config, char *line)
+int	text_parse(t_config *config, char *line, int textcount)
 {
 	if (ft_strncmp(line, "NO ", 3) == 0)
 		return (valid_text(&config->no_texture, "NO ", line));
@@ -122,8 +123,14 @@ int	text_parse(t_config *config, char *line)
 		return (valid_color(&config->ceiling_color, line));
 	if (is_map_line(line))
 	{
-		add_map_line(config, line);
-		return (0);
+		if (textcount == 6)
+		{
+			add_map_line (config, line);
+			return (0);
+		}
+		else
+			return (
+				printf("Error \nmap before arguments or not enough args"), 2);
 	}
 	return (0);
 }

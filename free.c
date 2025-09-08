@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:53:21 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/03 15:17:01 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/08 17:55:17 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	free_img(t_config *config)
 		}
 		i++;
 	}
-	if (config->frame.img)
+	if (config->frame.img && config->mlx_ptr)
 		mlx_destroy_image(config->mlx_ptr, config->frame.img);
 }
 
@@ -86,4 +86,17 @@ int	free_all(t_config *config)
 	}
 	exit(0);
 	return (1);
+}
+
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+         #
+#    By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/17 14:30:24 by ebansse           #+#    #+#              #
-#    Updated: 2025/09/03 13:21:51 by ebansse          ###   ########.fr        #
+#    Updated: 2025/09/06 15:49:38 by cguinot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ MLX_LD_FLAGS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11 -lm -lz -Llibft -l:libft.
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 SRCS = main.c display.c free.c render.c move.c init_tex_player.c
 PARSER_SRCS = parser/parsing.c parser/parsing_map.c
