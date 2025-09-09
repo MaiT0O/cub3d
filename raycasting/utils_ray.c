@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_ray.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:20:24 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/08 23:58:38 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/09 15:09:39 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,24 @@ int	is_only_whitespace(char *line)
 	{
 		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n'
 			&& line[i] != '\r')
-			return (printf("Error\nUnknown argument: %s\n", line), 0);
+			return (printf("Error\nUnknown argument: %s", line), 0);
 		i++;
 	}
+	return (1);
+}
+
+int	handle_player_tile(t_config *config, char **visited, int i, int j)
+{
+	if (config->player.map_x != -1 && config->player.map_y != -1)
+		return (printf("Error\ndouble player detected"),
+			free_visited(visited, config->map_height), 0);
+	config->player.map_x = j;
+	config->player.map_y = i;
+	if (j == 0 || i == 0 || j == config->map_width - 1
+		|| i == config->map_height - 1)
+		return (free_visited(visited, config->map_height), 0);
+	config->player.boussole = config->map[i][j];
+	if (!flood_fill(config, visited, j, i))
+		return (free_visited(visited, config->map_height), 0);
 	return (1);
 }

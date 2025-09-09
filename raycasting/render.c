@@ -6,11 +6,11 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:16:38 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/02 13:37:07 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/09 13:03:48 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	put_pixel_rgb(int x, int y, t_color *color, t_texture *frame)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init_tex_player.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/08 18:23:54 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/09/09 13:03:57 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	load_textures(t_config *config, t_texture *tex, char *path)
 {

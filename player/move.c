@@ -6,11 +6,11 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 17:58:15 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/03 13:11:44 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/09 13:04:02 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	key_press(int keycode, t_config *config)
 {

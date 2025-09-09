@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:16 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/08 23:58:02 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/09 15:21:38 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,20 @@
 
 int	flood_fill(t_config *map, char **visited, int x, int y)
 {
-	if (map->map[y][x] == ' ')
-	{
-		return (0);
-	}
 	if (x < 0 || x >= map->map_width || y < 0 || y >= map->map_height)
 		return (0);
-	if (map->map[y][x] == '0' && (y == 0 || x == 0 || y == map->map_height - 1
-		|| x == map->map_width - 1))
-	{
+	if (map->map[y][x] == ' ')
 		return (0);
-	}
-	if (x < 0 || x >= map->map_width || y < 0 || y >= map->map_height
-		|| visited[y][x] == '1' || map->map[y][x] == '1')
+	if (visited[y][x] == '1' || map->map[y][x] == '1')
 		return (1);
+	if (map->map[y][x] == '0' && (y == 0 || x == 0
+		|| y == map->map_height - 1 || x == map->map_width - 1))
+		return (0);
 	visited[y][x] = '1';
 	return (flood_fill(map, visited, x + 1, y)
 		&& flood_fill(map, visited, x - 1, y)
 		&& flood_fill(map, visited, x, y + 1)
 		&& flood_fill(map, visited, x, y - 1));
-	return (1);
 }
 
 int	check_extension(char *filename)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/08 23:46:55 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/09 15:02:47 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int		flood_fill(t_config *map, char **visited, int x, int y);
 char	**init_visited_array(t_config *map);
 int		is_only_whitespace(char *line);
 int		check_unknown_argument(char *line);
+int		handle_player_tile(t_config *config, char **visited, int i, int j);
 
 /*init*/
 void	init_config(t_config *config);

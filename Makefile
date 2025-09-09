@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+         #
+#    By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/17 14:30:24 by ebansse           #+#    #+#              #
-#    Updated: 2025/09/06 15:49:38 by cguinot          ###   ########.fr        #
+#    Updated: 2025/09/09 13:03:22 by ebansse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,12 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g
 
-SRCS = main.c display.c free.c render.c move.c init_tex_player.c
+SRCS = main.c free.c  
+PLAYER_SRCS = player/move.c player/init_tex_player.c
 PARSER_SRCS = parser/parsing.c parser/parsing_map.c
-RAYCAST_SRCS = raycasting/raycast.c raycasting/utils_ray.c
+RAYCAST_SRCS = raycasting/raycast.c raycasting/utils_ray.c raycasting/render.c
 
-OBJS = $(SRCS:.c=.o) $(PARSER_SRCS:.c=.o) $(RAYCAST_SRCS:.c=.o)
+OBJS = $(SRCS:.c=.o) $(PARSER_SRCS:.c=.o) $(RAYCAST_SRCS:.c=.o) $(PLAYER_SRCS:.c=.o)
 
 RED = \033[0;31m
 GREEN = \033[0;32m

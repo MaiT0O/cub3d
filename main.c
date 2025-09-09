@@ -3,19 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/08 23:56:11 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/09 15:31:42 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	map_closed(t_config *config, int i, int j)
+int	map_closed(t_config *config)
 {
 	char	**visited;
+	int		i;
+	int		j;
 
+	i = 0;
 	visited = init_visited_array(config);
 	while (config->map[i] && i < config->map_height)
 	{
@@ -25,20 +28,14 @@ int	map_closed(t_config *config, int i, int j)
 			if (config->map[i][j] == 'N' || config->map[i][j] == 'S'
 				|| config->map[i][j] == 'E' || config->map[i][j] == 'W')
 			{
-				if (config->player.map_x != -1 && config->player.map_y != -1)
-					return (printf("Error\ndouble player detected"),
-						free_visited(visited, config-> map_height), 0);
-				config->player.map_x = j;
-				config->player.map_y = i;
-				config->player.boussole = config->map[i][j];
-				if (!flood_fill(config, visited, j, i))
-					return (free_visited(visited, config-> map_height), 0);
+				if (!handle_player_tile(config, visited, i, j))
+					return (0);
 			}
 			j++;
 		}
 		i++;
 	}
-	return (free_visited(visited, config-> map_height), 1);
+	return (free_visited(visited, config->map_height), 1);
 }
 
 int	parsing(char *filename, t_config *config)
@@ -82,7 +79,7 @@ int	initialisation(t_config *config, char **argv)
 		free_all(config);
 		return (0);
 	}
-	if (!map_closed(config, 0, 0))
+	if (!map_closed(config))
 	{
 		printf ("Error\nplayer position or wall");
 		free_all(config);
