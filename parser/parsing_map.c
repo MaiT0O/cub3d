@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/08 18:41:15 by cguinot          ###   ########.fr       */
+/*   Updated: 2025/09/11 14:52:02 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,15 @@ int	add_map_line(t_config *config, char *line)
 	config->map = new_map;
 	config->map_height = map_height;
 	return (1);
+}
+
+int	cleanup_and_exit(int fd, char *line, int exit_code)
+{
+	if (line)
+		free(line);
+	line = get_next_line(fd);
+	while (line != NULL)
+		free(line);
+	close(fd);
+	return (exit_code);
 }

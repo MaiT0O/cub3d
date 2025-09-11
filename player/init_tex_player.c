@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 17:28:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/09 13:03:57 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/11 14:49:43 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	load_textures(t_config *config, t_texture *tex, char *path)
 	if (!tex->img)
 	{
 		printf("Error: failed to load texture: %s\n", path);
+		free_all(config);
 		exit(EXIT_FAILURE);
 	}
 	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp,
