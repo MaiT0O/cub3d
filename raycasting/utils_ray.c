@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:20:24 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/11 14:14:31 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/11 17:01:45 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ bool	touch(float px, float py, t_config *game)
 
 	x = px / BLOCK;
 	y = py / BLOCK;
+	if (x < 0 || y < 0 || y >= game->map_height || x >= game->map_width)
+		return (true);
+	if (!game->map[y] || (int)ft_strlen(game->map[y]) <= x)
+		return (true);
 	if (game->map[y][x] == '1')
 		return (true);
 	return (false);

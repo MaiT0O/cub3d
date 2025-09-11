@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/11 14:14:17 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/11 15:40:07 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	parsing(char *filename, t_config *config)
 		if (res == 1)
 			text_count += 1;
 		else if (res == 2)
-			return (cleanup_and_exit(fd, line, 0));
+			return (free(line), close(fd), 0);
 		free(line);
 		line = get_next_line(fd);
 	}
