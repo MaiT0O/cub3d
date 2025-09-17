@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:20:24 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/11 17:01:45 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/17 17:46:48 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	handle_player_tile(t_config *config, char **visited, int i, int j)
 			, free_visited(visited, config->map_height), 0);
 	config->player.boussole = config->map[i][j];
 	if (!flood_fill(config, visited, j, i))
-		return (printf("Error\nMap not closed\n")
+		return (printf("Error\nMap not closed or space in map\n")
 			, free_visited(visited, config->map_height), 0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/11 15:40:07 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/17 17:46:13 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	initialisation(t_config *config, char **argv)
 
 int	init_game(t_config *config)
 {
-	config->win_ptr = mlx_new_window(config->mlx_ptr, WIN_W, WIN_H, "cub3d");
+	config->win_ptr = mlx_new_window(config->mlx_ptr, WIN_W, WIN_H, "cub3D");
 	config->frame.img = mlx_new_image(config->mlx_ptr, WIN_W, WIN_H);
 	config->frame.addr = mlx_get_data_addr(config->frame.img,
 			&config->frame.bpp, &config->frame.line_length,
@@ -104,7 +104,7 @@ int	main(int argc, char **argv)
 
 	ft_memset(&config, 0, sizeof(config));
 	if (argc != 2)
-		return (printf("Error\nformat ./cub3d [map_file]"), 0);
+		return (printf("Error\nformat ./cub3D [map_file]"), 0);
 	else
 	{
 		if (initialisation(&config, argv))

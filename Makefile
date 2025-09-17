@@ -6,11 +6,11 @@
 #    By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/17 14:30:24 by ebansse           #+#    #+#              #
-#    Updated: 2025/09/09 13:03:22 by ebansse          ###   ########.fr        #
+#    Updated: 2025/09/17 17:42:16 by ebansse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub3d
+NAME = cub3D
 
 INCLUDES = -I/usr/include -Imlx -Ilibft
 

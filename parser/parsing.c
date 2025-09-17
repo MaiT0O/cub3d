@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:16 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/09 15:21:38 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:28:27 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	check_extension(char *filename)
 	if (ft_strncmp(filename + len - 4, ".cub", 4) != 0)
 	{
 		printf("Error\nwrong extension \n");
-		return (2);
+		return (0);
 	}
 	return (1);
 }
