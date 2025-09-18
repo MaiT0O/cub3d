@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/11 15:39:12 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/18 14:58:01 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ typedef struct s_config
 	int			tex_y;
 	int			tex_x;
 	int			speed;
+	int			map_started;
 }	t_config;
 
 /*parsing*/
@@ -102,7 +103,6 @@ int		check_extension(char *filename);
 int		valid_text(char **texture, char *identifier, char *line);
 int		valid_text_2(void);
 int		text_parse(t_config *config, char *line, int textcount);
-int		parsing(char *filename, t_config *config);
 
 int		add_map_line(t_config *config, char *line);
 int		is_map_line(char *line);

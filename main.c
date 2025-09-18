@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/17 17:46:13 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/18 14:55:24 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,11 @@ int	map_closed(t_config *config)
 	return (free_visited(visited, config->map_height), 1);
 }
 
-int	parsing(char *filename, t_config *config)
+int	parsing(char *filename, t_config *config, int res)
 {
 	char	*line;
 	int		text_count;
 	int		fd;
-	int		res;
 
 	text_count = 0;
 	if (!check_extension(filename))
@@ -54,14 +53,15 @@ int	parsing(char *filename, t_config *config)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		res = text_parse(config, line, text_count);
+		if (res != 2)
+			res = text_parse(config, line, text_count);
 		if (res == 1)
 			text_count += 1;
-		else if (res == 2)
-			return (free(line), close(fd), 0);
 		free(line);
 		line = get_next_line(fd);
 	}
+	if (res == 2)
+		return (free(line), close(fd), 0);
 	if (config->map_height <= 0)
 		return (printf("Error\nNo map"), free(line), close(fd), 0);
 	return (free(line), close(fd), 1);
@@ -74,7 +74,7 @@ int	initialisation(t_config *config, char **argv)
 	config->player.map_x = -1;
 	config->player.map_y = -1;
 	init_config(config);
-	if (!parsing(argv[1], config))
+	if (!parsing(argv[1], config, 0))
 		return (free_all(config), 0);
 	if (!map_closed(config))
 		return (free_all(config), 0);

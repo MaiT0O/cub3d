@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:20:24 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/17 17:46:48 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/18 14:05:27 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	is_only_whitespace(char *line)
 int	handle_player_tile(t_config *config, char **visited, int i, int j)
 {
 	if (config->player.map_x != -1 && config->player.map_y != -1)
-		return (printf("Error\ndouble player detected\n"),
+		return (printf("Error\nToo much player detected\n"),
 			free_visited(visited, config->map_height), 0);
 	config->player.map_x = j;
 	config->player.map_y = i;
@@ -71,7 +71,7 @@ int	handle_player_tile(t_config *config, char **visited, int i, int j)
 			, free_visited(visited, config->map_height), 0);
 	config->player.boussole = config->map[i][j];
 	if (!flood_fill(config, visited, j, i))
-		return (printf("Error\nMap not closed or space in map\n")
+		return (printf("Error\nMap not closed or wrong character in map\n")
 			, free_visited(visited, config->map_height), 0);
 	return (1);
 }

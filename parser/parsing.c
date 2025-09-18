@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:16 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/15 17:28:27 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/18 15:28:56 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ int	check_extension(char *filename)
 
 	len = ft_strlen(filename);
 	if (len < 5)
+	{
+		printf("Error\nFilename too short\n");
 		return (0);
+	}
 	if (ft_strncmp(filename + len - 4, ".cub", 4) != 0)
 	{
 		printf("Error\nwrong extension \n");
@@ -118,12 +121,14 @@ int	text_parse(t_config *config, char *line, int textcount)
 	if (is_map_line(line))
 	{
 		if (textcount == 6)
-			return (add_map_line(config, line), 0);
+		{
+			if (config->map_started == 0 || config->map_started == 1)
+				return (config->map_started = 1, add_map_line(config, line), 0);
+		}
 		else
-			return (printf("Error\nmap before arguments or not enough args")
-				, 2);
+			return (printf("Error\nmap before argument or not enough arg"), 2);
 	}
-	if (!is_only_whitespace(line))
-		return (2);
+	if (config->map_started == 1)
+		config->map_started = 2;
 	return (0);
 }
