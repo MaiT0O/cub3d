@@ -6,15 +6,34 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:16 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/18 15:28:56 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/18 18:45:43 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
+// void	print_array(char **array)
+// {
+// 	int i = 0;
+// 	int j;
+// 	while (array[i])
+// 	{
+// 		j = 0;
+// 		while (array[i][j])
+// 		{
+// 			printf("%c", array[i][j]);
+// 			j++;
+// 		}
+// 		printf("\n");
+// 		i++;
+// 	}
+// }
+
 int	flood_fill(t_config *map, char **visited, int x, int y)
 {
 	if (x < 0 || x >= map->map_width || y < 0 || y >= map->map_height)
+		return (0);
+	if (!map->map[y] || (int)ft_strlen(map->map[y]) <= x)
 		return (0);
 	if (map->map[y][x] == ' ')
 		return (0);

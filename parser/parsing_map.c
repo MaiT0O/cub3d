@@ -6,25 +6,29 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:49:04 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/18 15:26:06 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/18 18:43:18 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void	init_array_values(char **visited, t_config *map)
+void	normalize_map_lines(t_config *config)
 {
-	int	i;
-	int	j;
+	int		i;
+	char	*new_line;
 
 	i = 0;
-	while (i < map->map_height)
+	while (i < config->map_height)
 	{
-		j = 0;
-		while (j < map->map_width)
+		if ((int)ft_strlen(config->map[i]) < config->map_width)
 		{
-			visited[i][j] = '0';
-			j++;
+			new_line = create_normalized_line(config->map[i],
+					config->map_width);
+			if (new_line)
+			{
+				free(config->map[i]);
+				config->map[i] = new_line;
+			}
 		}
 		i++;
 	}
@@ -35,13 +39,14 @@ char	**init_visited_array(t_config *map)
 	char	**visited;
 	int		i;
 
+	normalize_map_lines(map);
 	visited = malloc(sizeof(char *) * map->map_height);
 	if (!visited)
 		return (NULL);
 	i = 0;
 	while (i < map->map_height)
 	{
-		visited[i] = malloc(sizeof(char) * map->map_width);
+		visited[i] = malloc(sizeof(char) * (map->map_width + 1));
 		if (!visited[i])
 		{
 			while (--i >= 0)
@@ -49,9 +54,9 @@ char	**init_visited_array(t_config *map)
 			free(visited);
 			return (NULL);
 		}
+		init_visited_line(visited[i], map->map_width);
 		i++;
 	}
-	init_array_values(visited, map);
 	return (visited);
 }
 
@@ -97,15 +102,4 @@ int	add_map_line(t_config *config, char *line)
 	config->map = new_map;
 	config->map_height = map_height;
 	return (1);
-}
-
-int	cleanup_and_exit(int fd, char *line, int exit_code)
-{
-	if (line)
-		free(line);
-	line = get_next_line(fd);
-	while (line != NULL)
-		free(line);
-	close(fd);
-	return (exit_code);
 }
