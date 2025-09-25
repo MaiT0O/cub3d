@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cguinot <cguinot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:30:11 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/18 18:46:18 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/23 20:08:57 by cguinot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,29 @@
 
 int	map_closed(t_config *config)
 {
-	char	**visited;
-	int		i;
-	int		j;
+	int	x;
+	int	y;
 
-	i = 0;
-	visited = init_visited_array(config);
-	while (config->map[i] && i < config->map_height)
+	x = 0;
+	if (!find_player(config))
+		return (0);
+	while (config->map[x])
 	{
-		j = 0;
-		while (config->map[i][j])
+		y = 0;
+		while (config->map[x][y])
 		{
-			if (config->map[i][j] == 'N' || config->map[i][j] == 'S'
-				|| config->map[i][j] == 'E' || config->map[i][j] == 'W')
+			if (config->map[x][y] == '0')
 			{
-				if (!handle_player_tile(config, visited, i, j))
-					return (0);
+				if (!check_zero_neighbors(config, x, y))
+				{
+					return (printf("Error \nMap not closed"), 0);
+				}
 			}
-			j++;
+			y++;
 		}
-		i++;
+		x++;
 	}
-	return (free_visited(visited, config->map_height), 1);
+	return (1);
 }
 
 int	parsing(char *filename, t_config *config, int res)

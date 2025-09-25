@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/18 18:45:55 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:14:07 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,20 +101,20 @@ typedef struct s_config
 /*parsing*/
 int		check_extension(char *filename);
 int		valid_text(char **texture, char *identifier, char *line);
-int		valid_text_2(void);
 int		text_parse(t_config *config, char *line, int textcount);
+int		check_extension(char *filename);
+int		is_line_color(char *line);
+int		is_only_digit(char *nb);
 
 int		add_map_line(t_config *config, char *line);
 int		is_map_line(char *line);
 
-int		flood_fill(t_config *map, char **visited, int x, int y);
-char	**init_visited_array(t_config *map);
+int		find_player(t_config *config);
+int		check_zero_neighbors(t_config *config, int x, int y);
 int		is_only_whitespace(char *line);
 int		check_unknown_argument(char *line);
-int		handle_player_tile(t_config *config, char **visited, int i, int j);
-// void	print_array(char **array);
-void	init_visited_line(char *visited_line, int width);
-char	*create_normalized_line(char *original_line, int target_width);
+int		handle_player_tile(t_config *config, int i, int j);
+void	print_array(char **array);
 
 /*init*/
 void	init_config(t_config *config);

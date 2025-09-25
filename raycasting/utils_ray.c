@@ -6,7 +6,7 @@
 /*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:20:24 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/18 14:05:27 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:07:14 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,37 +41,4 @@ bool	touch(float px, float py, t_config *game)
 	if (game->map[y][x] == '1')
 		return (true);
 	return (false);
-}
-
-int	is_only_whitespace(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n'
-			&& line[i] != '\r')
-			return (printf("Error\nUnknown argument: %s", line), 0);
-		i++;
-	}
-	return (1);
-}
-
-int	handle_player_tile(t_config *config, char **visited, int i, int j)
-{
-	if (config->player.map_x != -1 && config->player.map_y != -1)
-		return (printf("Error\nToo much player detected\n"),
-			free_visited(visited, config->map_height), 0);
-	config->player.map_x = j;
-	config->player.map_y = i;
-	if (j == 0 || i == 0 || j == config->map_width - 1
-		|| i == config->map_height - 1)
-		return (printf("Error\nSpawn out of map\n")
-			, free_visited(visited, config->map_height), 0);
-	config->player.boussole = config->map[i][j];
-	if (!flood_fill(config, visited, j, i))
-		return (printf("Error\nMap not closed or wrong character in map\n")
-			, free_visited(visited, config->map_height), 0);
-	return (1);
 }
