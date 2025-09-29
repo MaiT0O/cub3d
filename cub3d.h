@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:01:15 by cguinot           #+#    #+#             */
-/*   Updated: 2025/09/25 17:14:07 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/29 15:24:21 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int		is_only_whitespace(char *line);
 int		check_unknown_argument(char *line);
 int		handle_player_tile(t_config *config, int i, int j);
 void	print_array(char **array);
+int		ft_atoi_neuille(const char *str);
 
 /*init*/
 void	init_config(t_config *config);

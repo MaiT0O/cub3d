@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 18:40:54 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/25 17:01:29 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/29 15:30:29 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,36 +66,6 @@ int	check_extension(char *filename)
 	{
 		printf("Error\nwrong extension \n");
 		return (0);
-	}
-	return (1);
-}
-
-int	is_line_color(char *line)
-{
-	int	i;
-
-	i = 1;
-	while (line[i] && line[i] != '\n')
-	{
-		if (!ft_isdigit(line[i]) && line[i] != ',' && line[i] != ' ' && line[i] != '\t')
-			return (printf("Error\ninvalid color\n"), 0);
-		i++;
-	}
-	return (1);
-}
-
-int	is_only_digit(char *nb)
-{
-	int	i;
-
-	i = 0;
-	if (nb[i] == '\0')
-		return (0);
-	while (nb[i])
-	{
-		if (!ft_isdigit(nb[i]))
-			return (0);
-		i++;
 	}
 	return (1);
 }

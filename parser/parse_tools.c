@@ -3,40 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   parse_tools.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebansse <ebansse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebansse <ebansse@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:08:40 by ebansse           #+#    #+#             */
-/*   Updated: 2025/09/25 17:09:45 by ebansse          ###   ########.fr       */
+/*   Updated: 2025/09/29 15:30:56 by ebansse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-int	valid_text(char **texture, char *identifier, char *line)
+int	ft_atoi_neuille(const char *str)
 {
-	char	*path;
-	char	*trimmed_path;
-	int		fd;
+	int	nbr;
+	int	i;
 
-	path = line + ft_strlen(identifier);
-	trimmed_path = ft_strtrim(path, " \t\n\r");
-	fd = open(trimmed_path, O_RDONLY);
-	if (fd < 0)
+	i = 0;
+	nbr = 0;
+	while (str[i] == ' ' || ('\t' <= str[i] && str[i] <= '\r'))
+		i++;
+	if (!str[i])
+		return (-1);
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		printf("Error\ncannot open texture");
-		free(trimmed_path);
-		return (2);
+		nbr = nbr * 10 + str[i] - '0';
+		i++;
 	}
-	close(fd);
-	if (*texture != NULL)
-	{
-		printf("Error\ndouble path assignation");
-		free(trimmed_path);
-		return (2);
-	}
-	*texture = ft_strdup(trimmed_path);
-	free(trimmed_path);
-	return (1);
+	if (str[i] == '\0')
+		return (nbr);
+	else
+		return (-1);
 }
 
 int	is_only_whitespace(char *line)
